@@ -243,15 +243,17 @@ def train_final(out_dir: Path = Path("models")) -> dict:
     tuned during the walk-forward backtest (so they were chosen on held-out years)."""
     flows = load_flows()
     thr = thresholds(flows, int(flows.index.year.max()))
-    df = add_targets(build_features(flows), thr)
+    rain = load_rain() if USE_RAIN else None
+    df = add_targets(build_features(flows, rain), thr)
     cols = feature_cols(df)
     out_dir.mkdir(exist_ok=True)
-    bt = json.loads(Path("reports/forecast_backtest.json").read_text())["cutoffs"]
+    bt = json.loads(Path(f"reports/forecast_backtest{'_rain' if USE_RAIN else ''}.json").read_text())["cutoffs"]
     cuts = {h: float(np.median([v for k, v in bt.items() if k.endswith(f"_h{h}")])) for h in HORIZONS}
     for h in HORIZONS:
         tr = df.dropna(subset=[f"y_{h}"])
         lgb.train(PARAMS, lgb.Dataset(tr[cols], tr[f"y_{h}"], categorical_feature=["station"]), ROUNDS).save_model(str(out_dir / f"forecast_h{h}.txt"))
-    meta = {"trained_through": str(flows.index.max().date()), "level": LEVEL, "stations": list(flows.columns),
+    meta = {"trained_through": str(flows.index.max().date()), "level": LEVEL, "use_rain": USE_RAIN,
+            "rain_points": list(rain.columns) if rain is not None else [], "stations": list(flows.columns),
             "thresholds": thr.round(1).to_dict(), "cutoffs": cuts, "features": cols, "horizons": HORIZONS}
     (out_dir / "forecast_meta.json").write_text(json.dumps(meta, indent=2))
     return meta

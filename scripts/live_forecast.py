@@ -21,6 +21,8 @@ sys.path.insert(0, str(ROOT))
 from floodwatch.forecast import build_features  # noqa: E402
 
 URL = "https://flood-api.open-meteo.com/v1/flood"
+POWER = "https://power.larc.nasa.gov/api/temporal/daily/point"
+RECENT = "https://api.open-meteo.com/v1/forecast"
 HISTORY_DAYS = 45  # enough for the 30-day rolling features
 
 
@@ -36,6 +38,36 @@ def fetch(lat: float, lon: float, start: str, end: str) -> pd.Series:
     raise RuntimeError(f"could not fetch flow at {lat},{lon}")
 
 
+def fetch_rain(lat: float, lon: float, start: date, end: date) -> tuple[pd.Series, int]:
+    """NASA POWER rainfall (the training source); its last ~3 days are not published yet,
+    so those are filled from Open-Meteo's recent observed-analysis rainfall. Returns (series, days filled)."""
+    idx = pd.date_range(start, end)
+    s = pd.Series(np.nan, index=idx)
+    for attempt in range(4):
+        try:
+            r = requests.get(POWER, params=dict(parameters="PRECTOTCORR", community="AG", latitude=lat, longitude=lon,
+                                                start=start.strftime("%Y%m%d"), end=end.strftime("%Y%m%d"), format="JSON"), timeout=120)
+            r.raise_for_status()
+            d = r.json()["properties"]["parameter"]["PRECTOTCORR"]
+            s = pd.Series({pd.Timestamp(k): (v if v >= 0 else np.nan) for k, v in d.items()}).reindex(idx)
+            break
+        except requests.RequestException:
+            time.sleep(5 * 2 ** attempt)
+    missing = s.isna()
+    if missing.any():
+        try:
+            r = requests.get(RECENT, params=dict(latitude=lat, longitude=lon, daily="precipitation_sum", past_days=10,
+                                                 forecast_days=1, timezone="Asia/Kolkata"), timeout=60)
+            r.raise_for_status()
+            d = r.json()["daily"]
+            om = pd.Series(d["precipitation_sum"], index=pd.to_datetime(d["time"]), dtype=float)
+            s = s.fillna(om.reindex(idx))
+        except requests.RequestException:
+            pass
+    filled = int(missing.sum())
+    return s.fillna(0.0), filled
+
+
 def main() -> None:
     meta = json.loads((ROOT / "models/forecast_meta.json").read_text())
     stations = json.loads((ROOT / "data/river/stations.json").read_text())
@@ -44,13 +76,22 @@ def main() -> None:
     # "today" in GloFAS terms = the latest day with a value; the API also returns forecast days, which we ignore
     flows = pd.DataFrame({s: fetch(stations[s]["cell_lat"], stations[s]["cell_lon"], start, today.isoformat()) for s in meta["stations"]})
     flows = flows[flows.index <= pd.Timestamp(today)].interpolate(limit=3).dropna(how="all")
-    feats = build_features(flows[meta["stations"]])
+    rain, filled = None, 0
+    if meta.get("use_rain"):
+        pts = {f.stem: json.loads(f.read_text()) for f in (ROOT / "data/rain").glob("*.json")}
+        cols = {}
+        for p in meta["rain_points"]:
+            cols[p], n = fetch_rain(pts[p]["lat"], pts[p]["lon"], today - timedelta(days=HISTORY_DAYS), today)
+            filled = max(filled, n)
+        rain = pd.DataFrame(cols)
+    feats = build_features(flows[meta["stations"]], rain)
     last = feats["date"].max()
     now = feats[feats.date == last].copy()
     thr = pd.Series(meta["thresholds"])
     now["ratio"] = np.log(now["q_raw"] / now["station_name"].map(thr))
     now["flood_now"] = (now["q_raw"] > now["station_name"].map(thr)).astype(int)
-    out = {"issued": str(last.date()), "generated": today.isoformat(), "trained_through": meta["trained_through"], "stations": {}}
+    out = {"issued": str(last.date()), "generated": today.isoformat(), "trained_through": meta["trained_through"],
+           "uses_rain": bool(meta.get("use_rain")), "rain_days_filled_from_open_meteo": filled, "stations": {}}
     for _, row in now.iterrows():
         s = row["station_name"]
         rec = {"q": round(float(row["q_raw"])), "thr": round(float(thr[s])), "p": {}, "cut": {}}

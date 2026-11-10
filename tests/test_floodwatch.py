@@ -81,3 +81,15 @@ def test_score_counts():
     y = np.array([1, 1, 0, 0], bool)
     w = np.array([1, 0, 1, 0], bool)
     assert score(y, w) == {"hit_rate": 0.5, "false_alarm_ratio": 0.5, "csi": round(1 / 3, 3), "flooded": 2, "warned": 2}
+
+
+def test_rain_features_never_look_ahead(flows):
+    rain = F.load_rain()
+    if rain is None:
+        pytest.skip("rainfall not downloaded")
+    full = F.build_features(flows, rain)
+    cut = F.build_features(flows[flows.index <= "2022-06-15"], rain[rain.index <= "2022-06-15"])
+    cols = [c for c in F.feature_cols(full) if c.startswith("rain_")]
+    a = full[full.date == "2022-06-15"].set_index("station_name")[cols].sort_index()
+    b = cut[cut.date == "2022-06-15"].set_index("station_name")[cols].sort_index()
+    pd.testing.assert_frame_equal(a, b)

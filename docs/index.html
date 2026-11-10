@@ -244,7 +244,7 @@ footer p{max-width:85ch;margin:0 0 8px}
       <div>
         <span class="pill"><b aria-hidden="true"></b>Live flood outlook for Assam</span>
         <h1>Know when the Brahmaputra will rise.</h1>
-        <p class="lede">FloodWatch reads river flow along the Brahmaputra and its tributaries every morning and forecasts flooding up to seven days ahead for all 33 districts. Its forecasts are tested against six real monsoons.</p>
+        <p class="lede">FloodWatch reads river flow and rainfall across the Brahmaputra basin every morning and forecasts flooding up to seven days ahead for all 33 districts. Its forecasts are tested against six real monsoons.</p>
         <div class="ctas">
           <a class="btn btn-white" href="#live"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></svg>Today's forecast</a>
           <a class="btn btn-ghost" href="#check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Check a past date</a>
@@ -267,7 +267,7 @@ footer p{max-width:85ch;margin:0 0 8px}
       <div class="center"><h2>Three ways FloodWatch watches the floods</h2><p>River forecasts, impact forecasts and satellite maps, each tested on data it never trained on.</p></div>
       <div class="grid3">
         <div class="card feature"><div class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 17l5-5 4 4 8-8"/><path d="M14 8h6v6"/></svg></div>
-          <h3>Forecast the rivers</h3><p>Water passing Dibrugarh reaches Guwahati days later. A model trained on 24 years of flow at 12 stations learns how surges travel and warns 1–7 days ahead.</p><a href="#live">See today's rivers</a></div>
+          <h3>Forecast the rivers</h3><p>Rain over Arunachal and water passing Dibrugarh reach Guwahati days later. A model trained on 24 years of river flow and rainfall learns how surges travel and warns 1–7 days ahead.</p><a href="#live">See today's rivers</a></div>
         <div class="card feature"><div class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M17 4.5a3.5 3.5 0 0 1 0 7M21.5 20c-.5-2.4-1.8-4.1-3.6-4.9"/></svg></div>
           <h3>Predict who gets affected</h3><p>Half of Assam's flood damage happens when the main river looks fine. A second model learns from ASDMA's district reports where people are actually hit.</p><a href="#track">See the track record</a></div>
         <div class="card feature"><div class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 14l6-6 4 4 6-6"/><rect x="2" y="16" width="20" height="5" rx="1.5"/><path d="M14 3l2 2M18 7l2 2"/></svg></div>
@@ -345,13 +345,17 @@ footer p{max-width:85ch;margin:0 0 8px}
 <!-- ================= TRACK RECORD ================= -->
 <div class="page" id="p-track">
   <div class="wrap">
-    <div class="page-head"><div><h1>Track record</h1><p>The river model learned from 1997–2020, then ran day by day through 2021–2026. The score is the critical success index (CSI): hits ÷ (hits + misses + false alarms). 1 is perfect.</p></div></div>
+    <div class="page-head"><div><h1>Track record</h1><p>The model reads river flow and rainfall. It learned from 1997–2020, then ran day by day through 2021–2026. The score is the critical success index (CSI): hits ÷ (hits + misses + false alarms). 1 is perfect.</p></div></div>
     <div class="cols">
       <div class="card"><h3>River flooding, by forecast lead time</h3><p class="sub">12 river stations, 2021–2026, against assuming tomorrow looks like today.</p>
         <svg id="skill" viewBox="0 0 520 300" role="img" aria-label="Forecast skill by lead time"></svg><p class="note" id="events"></p></div>
       <div class="card"><h3>Real flood impacts, by district and month</h3><p class="sub">Warnings against months when ASDMA reported 1,000+ people affected. May–Oct, 33 districts.</p>
         <div class="tablewrap"><table id="impacttable"></table></div></div>
     </div>
+    <div class="card" style="margin-top:18px"><h3>Early warning, day by day: the 2022 floods</h3>
+      <p class="sub">ASDMA's daily district reports, 15 May – 20 Oct 2022. For each of the times a district started reporting 1,000+ people affected, had its forecast warned in advance?</p>
+      <div class="tablewrap"><table id="dailytable"></table></div>
+      <p class="note" id="dailynote"></p></div>
     <p class="honest" id="honest"></p>
   </div>
 </div>
@@ -370,7 +374,7 @@ footer p{max-width:85ch;margin:0 0 8px}
   <div class="wrap">
     <div class="page-head"><div><h1>How it works</h1><p>Four steps, each tested on data it never trained on. Full code and results are on GitHub.</p></div></div>
     <ol class="steps">
-      <li class="card"><h3>Read the rivers</h3><p>Daily flow at six Brahmaputra stations from Dibrugarh to Dhubri, plus the Subansiri, Jia Bharali, Dhansiri, Kopili, Beki and Barak (GloFAS, 1997–2026).</p></li>
+      <li class="card"><h3>Read the rivers and the rain</h3><p>Daily flow at six Brahmaputra stations from Dibrugarh to Dhubri plus six tributaries (GloFAS), and rainfall at 15 points from Arunachal to Meghalaya (NASA POWER), 1997–2026.</p></li>
       <li class="card"><h3>Learn how surges travel</h3><p>A gradient-boosted model per lead time uses each station's recent rise and every upstream station's, and predicts whether flow reaches the warning level within 1–7 days.</p></li>
       <li class="card"><h3>Predict impact, not just water</h3><p>River forecasts plus each district's flood history from other years give the chance that ASDMA reports 1,000+ people affected that month.</p></li>
       <li class="card"><h3>See the water from space</h3><p>A U-Net maps floodwater on Sentinel-1 radar, so forecasts can be checked against where water actually spread.</p></li>
@@ -379,7 +383,7 @@ footer p{max-width:85ch;margin:0 0 8px}
       <div class="card"><h3>Built to avoid fooling itself</h3>
         <ul class="limits"><li>Flood levels and alert cut-offs come from training years only.</li><li>A day's inputs are identical whether or not later days exist; automated tests check this on every change.</li><li>Each test year is forecast with a model that has never seen it.</li><li>Live forecasts are logged before events and scored afterwards.</li></ul></div>
       <div class="card"><h3>Limitations</h3>
-        <ul class="limits"><li>River flow is from the GloFAS reanalysis, a model, not gauge readings.</li><li>ASDMA's district records start in 2021 and are monthly.</li><li>No rainfall yet. It is the next addition and should help most with local floods.</li><li>A research project, not an official warning service.</li></ul></div>
+        <ul class="limits"><li>River flow is from the GloFAS reanalysis, a model, not gauge readings.</li><li>ASDMA's district records start in 2021 and are monthly.</li><li>Rainfall comes from 15 points, so very local downpours can fall between them. NASA's rainfall arrives 3 days late; the live forecast fills those days from Open-Meteo.</li><li>A research project, not an official warning service.</li></ul></div>
     </div>
   </div>
 </div>
@@ -387,7 +391,7 @@ footer p{max-width:85ch;margin:0 0 8px}
 
 <footer>
   <div class="wrap">
-    <p><b>Data:</b> river discharge from GloFAS v4 via Open-Meteo · flood reports from ASDMA's daily FRIMS bulletins, compiled by CivicDataLab's IDS-DRR project · radar scenes and labels from Sen1Floods11 (Bonafilia et al., 2020) · district boundaries from Census 2011 shapefiles.</p>
+    <p><b>Data:</b> river discharge from GloFAS v4 via Open-Meteo · rainfall from NASA POWER, with the latest days from Open-Meteo · flood reports from ASDMA's daily FRIMS bulletins, compiled by CivicDataLab's IDS-DRR project · radar scenes and labels from Sen1Floods11 (Bonafilia et al., 2020) · district boundaries from Census 2011 shapefiles.</p>
     <p>A research project by Samiya Kazi · <a href="https://github.com/samiyakazi23/floodwatch">code on GitHub</a>. For official flood warnings, follow ASDMA and the Central Water Commission.</p>
   </div>
 </footer>
@@ -470,7 +474,7 @@ let trendStation="Guwahati";
   const issued=new Date(live.issued+"T00:00:00");
   $("#status").innerHTML=[
     ["River data feed",`GloFAS via Open-Meteo · latest day ${prettyDate(live.issued)}`,"Online","c-ok",'<path d="M4 14c2.5 0 2.5-2.5 5-2.5s2.5 2.5 5 2.5 2.5-2.5 5-2.5"/><path d="M4 19c2.5 0 2.5-2.5 5-2.5s2.5 2.5 5 2.5 2.5-2.5 5-2.5"/>'],
-    ["Forecast models",`5 lead times · trained on river data to ${prettyDate(live.trained_through)}`,"Ready","c-ok",'<path d="M3 17l5-5 4 4 8-8"/>'],
+    ["Forecast models",`5 lead times · river flow${live.uses_rain?" + rainfall":""} to ${prettyDate(live.trained_through)}`,"Ready","c-ok",'<path d="M3 17l5-5 4 4 8-8"/>'],
     ["Daily run","GitHub Actions · every day at 7:10 AM IST","Scheduled","c-ok",'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>'],
     ["Impact model","Needs ASDMA's monthly reports · monsoon only",(+live.issued.slice(5,7)<5||+live.issued.slice(5,7)>10)?"Off season":"Active",(+live.issued.slice(5,7)<5||+live.issued.slice(5,7)>10)?"c-na":"c-ok",'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/>'],
     ["Satellite model",`U-Net · ${summary.segmentation.unet.water_iou.toFixed(2)} water overlap on test scenes`,"Ready","c-ok",'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 15l5-5 4 4 3-3 6 6"/>'],
@@ -618,6 +622,11 @@ setRange();
   const rows=[["FloodWatch impact model",Y.impact_model,true],["River forecast alone",Y.river_forecast_only],["Every June and July",Y.climatology_jun_jul],["District flood history",Y.district_history_only],["River observed above warning",Y.river_observed_above_warning]];
   $("#impacttable").innerHTML=`<thead><tr><th>Method</th><th class="n">Floods warned</th><th class="n">False alarms</th><th class="n">CSI</th></tr></thead><tbody>`+
     rows.map(([n,r,o])=>`<tr class="${o?"ours":""}"><td>${n}</td><td class="n">${pct(r.hit_rate)}</td><td class="n">${pct(r.false_alarm_ratio)}</td><td class="n">${r.csi.toFixed(2)}</td></tr>`).join("")+"</tbody>";
+  const D=summary.daily_2022;
+  const drow=(n,r,o)=>`<tr class="${o?"ours":""}"><td>${n}</td><td class="n">${pct(r.warned_1d_before)}</td><td class="n">${pct(r.warned_3d_before)}</td><td class="n">${pct(r.warned_5d_before)}</td><td class="n">${r.false_alarm_rate_quiet_days!=null?pct(r.false_alarm_rate_quiet_days):"—"}</td></tr>`;
+  $("#dailytable").innerHTML=`<thead><tr><th>Method</th><th class="n">1 day before</th><th class="n">3 days before</th><th class="n">5 days before</th><th class="n">False alarms on quiet days</th></tr></thead><tbody>`+
+    drow("FloodWatch, river + rainfall",D.river_plus_rain,true)+drow("FloodWatch, river only",D.river_only)+drow("Heavy local rain rule",D.ref_heavy_local_rain)+drow("River already near warning level",D.ref_river_near_level)+"</tbody>";
+  $("#dailynote").textContent=`${D.onsets} district flood onsets. Adding upstream and local rainfall nearly quadruples the floods warned three days ahead with no rise in false alarms; a simple heavy-rain rule warns more often but raises false alarms on ${pct(D.ref_heavy_local_rain.false_alarm_rate_quiet_days)} of quiet days.`;
   $("#honest").innerHTML=`<b>A stricter test.</b> ASDMA's district records start in 2021, so the table holds out one year at a time. Trained only on earlier years, the impact model scores ${py[2022].toFixed(2)} in 2022 with one year to learn from, then ${py[2023].toFixed(2)}, ${py[2024].toFixed(2)}, ${py[2025].toFixed(2)} and ${py[2026].toFixed(2)} in 2023–2026. It beats the calendar baseline in three of those four years and improves as history accumulates.`;
 })();
 

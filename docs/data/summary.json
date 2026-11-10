@@ -1,37 +1,50 @@
 {
  "forecast": {
   "1": {
-   "hit_rate": 0.911,
-   "false_alarm_ratio": 0.118,
-   "csi": 0.812,
+   "hit_rate": 0.904,
+   "false_alarm_ratio": 0.098,
+   "csi": 0.823,
    "persistence_csi": 0.729
   },
   "2": {
-   "hit_rate": 0.785,
-   "false_alarm_ratio": 0.096,
-   "csi": 0.725,
+   "hit_rate": 0.804,
+   "false_alarm_ratio": 0.12,
+   "csi": 0.724,
    "persistence_csi": 0.648
   },
   "3": {
-   "hit_rate": 0.746,
-   "false_alarm_ratio": 0.19,
-   "csi": 0.635,
+   "hit_rate": 0.732,
+   "false_alarm_ratio": 0.165,
+   "csi": 0.639,
    "persistence_csi": 0.585
   },
   "5": {
-   "hit_rate": 0.583,
-   "false_alarm_ratio": 0.199,
-   "csi": 0.51,
+   "hit_rate": 0.654,
+   "false_alarm_ratio": 0.311,
+   "csi": 0.505,
    "persistence_csi": 0.489
   },
   "7": {
-   "hit_rate": 0.54,
-   "false_alarm_ratio": 0.266,
-   "csi": 0.451,
+   "hit_rate": 0.587,
+   "false_alarm_ratio": 0.393,
+   "csi": 0.425,
    "persistence_csi": 0.42
   }
  },
  "events": {
+  "n_onsets": 62,
+  "warned_1plus_days": 0.548,
+  "warned_3plus_days": 0.177,
+  "median_lead_days": 1.0
+ },
+ "forecast_river_only": {
+  "1": 0.812,
+  "2": 0.725,
+  "3": 0.635,
+  "5": 0.51,
+  "7": 0.451
+ },
+ "events_river_only": {
   "n_onsets": 62,
   "warned_1plus_days": 0.581,
   "warned_3plus_days": 0.065,
@@ -41,18 +54,18 @@
   "unit": "district-month, May-Oct 2021-2026 (leave-one-year-out)",
   "n": 1155,
   "impact_model": {
-   "hit_rate": 0.627,
-   "false_alarm_ratio": 0.461,
-   "csi": 0.408,
+   "hit_rate": 0.595,
+   "false_alarm_ratio": 0.441,
+   "csi": 0.405,
    "flooded": 311,
-   "warned": 362
+   "warned": 331
   },
   "river_forecast_only": {
-   "hit_rate": 0.434,
+   "hit_rate": 0.418,
    "false_alarm_ratio": 0.435,
-   "csi": 0.325,
+   "csi": 0.316,
    "flooded": 311,
-   "warned": 239
+   "warned": 230
   },
   "river_observed_above_warning": {
    "hit_rate": 0.373,
@@ -76,44 +89,101 @@
    "warned": 396
   },
   "per_year_impact_csi": {
-   "2021": 0.368,
-   "2022": 0.374,
-   "2023": 0.467,
-   "2024": 0.427,
-   "2025": 0.384,
-   "2026": 0.434
+   "2021": 0.316,
+   "2022": 0.375,
+   "2023": 0.5,
+   "2024": 0.486,
+   "2025": 0.326,
+   "2026": 0.489
   },
-  "share_of_affected_people_in_warned_months": 0.692
+  "share_of_affected_people_in_warned_months": 0.638,
+  "strict_walkforward": {
+   "all_years": {
+    "hit_rate": 0.607,
+    "false_alarm_ratio": 0.536,
+    "csi": 0.357,
+    "flooded": 267,
+    "warned": 349
+   },
+   "from_2023": {
+    "hit_rate": 0.76,
+    "false_alarm_ratio": 0.511,
+    "csi": 0.423,
+    "flooded": 196,
+    "warned": 305
+   },
+   "climatology_from_2023": {
+    "hit_rate": 0.602,
+    "false_alarm_ratio": 0.553,
+    "csi": 0.345,
+    "flooded": 196,
+    "warned": 264
+   },
+   "per_year": {
+    "2022": 0.127,
+    "2023": 0.452,
+    "2024": 0.405,
+    "2025": 0.364,
+    "2026": 0.478
+   }
+  }
  },
  "impact_strict": {
-  "unit": "district-month May-Oct, 2022-2026, trained on past years only",
-  "impact_model": {
-   "hit_rate": 0.588,
-   "false_alarm_ratio": 0.533,
-   "csi": 0.352,
+  "all_years": {
+   "hit_rate": 0.607,
+   "false_alarm_ratio": 0.536,
+   "csi": 0.357,
    "flooded": 267,
-   "warned": 336
+   "warned": 349
   },
-  "river_forecast_only": {
-   "hit_rate": 0.431,
-   "false_alarm_ratio": 0.442,
-   "csi": 0.321,
-   "flooded": 267,
-   "warned": 206
+  "from_2023": {
+   "hit_rate": 0.76,
+   "false_alarm_ratio": 0.511,
+   "csi": 0.423,
+   "flooded": 196,
+   "warned": 305
   },
-  "climatology_jun_jul": {
-   "hit_rate": 0.61,
-   "false_alarm_ratio": 0.506,
-   "csi": 0.376,
-   "flooded": 267,
-   "warned": 330
+  "climatology_from_2023": {
+   "hit_rate": 0.602,
+   "false_alarm_ratio": 0.553,
+   "csi": 0.345,
+   "flooded": 196,
+   "warned": 264
   },
   "per_year": {
    "2022": 0.127,
-   "2023": 0.466,
-   "2024": 0.469,
-   "2025": 0.288,
-   "2026": 0.407
+   "2023": 0.452,
+   "2024": 0.405,
+   "2025": 0.364,
+   "2026": 0.478
+  }
+ },
+ "daily_2022": {
+  "onsets": 45,
+  "season": "2022-05-15 to 2022-10-20",
+  "min_affected": 1000,
+  "river_only": {
+   "warned_1d_before": 0.378,
+   "warned_3d_before": 0.111,
+   "warned_5d_before": 0.022,
+   "false_alarm_rate_quiet_days": 0.009
+  },
+  "river_plus_rain": {
+   "warned_1d_before": 0.511,
+   "warned_3d_before": 0.422,
+   "warned_5d_before": 0.178,
+   "false_alarm_rate_quiet_days": 0.009
+  },
+  "ref_heavy_local_rain": {
+   "warned_1d_before": 0.778,
+   "warned_3d_before": 0.711,
+   "warned_5d_before": 0.578,
+   "false_alarm_rate_quiet_days": 0.156
+  },
+  "ref_river_near_level": {
+   "warned_1d_before": 0.422,
+   "warned_3d_before": 0.133,
+   "warned_5d_before": 0.044
   }
  },
  "segmentation": {
