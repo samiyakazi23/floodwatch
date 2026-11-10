@@ -1,0 +1,70 @@
+{
+  "unit": "district-month, May-Oct 2021-2026",
+  "truth": "ASDMA reported >= 1000 people affected",
+  "n": 1155,
+  "model_3day_forecast": {
+    "hit_rate": 0.434,
+    "false_alarm_ratio": 0.435,
+    "csi": 0.325,
+    "flooded": 311,
+    "warned": 239
+  },
+  "baseline_climatology_jun_jul": {
+    "hit_rate": 0.55,
+    "false_alarm_ratio": 0.568,
+    "csi": 0.319,
+    "flooded": 311,
+    "warned": 396
+  },
+  "ceiling_river_above_warning_observed": {
+    "hit_rate": 0.373,
+    "false_alarm_ratio": 0.414,
+    "csi": 0.295,
+    "flooded": 311,
+    "warned": 198
+  },
+  "per_year_model_csi": {
+    "2021": 0.351,
+    "2022": 0.295,
+    "2023": 0.403,
+    "2024": 0.495,
+    "2025": 0.161,
+    "2026": 0.104
+  },
+  "district_station_map": {
+    "Tinsukia": "Dibrugarh",
+    "Dhemaji": "Dibrugarh",
+    "Dibrugarh": "Dibrugarh",
+    "Lakhimpur": "Badatighat",
+    "Sivasagar": "Neamatighat",
+    "Jorhat": "Neamatighat",
+    "Sonitpur": "Tezpur",
+    "Golaghat": "Numaligarh",
+    "Udalguri": "Guwahati",
+    "Chirang": "Beki Road",
+    "Baksa": "Guwahati",
+    "Nagaon": "Tezpur",
+    "Kokrajhar": "Dhubri",
+    "Darrang": "Guwahati",
+    "Barpeta": "Beki Road",
+    "Nalbari": "Beki Road",
+    "Morigaon": "Dharamtul",
+    "Kamrup": "Guwahati",
+    "Bongaigaon": "Goalpara",
+    "Dhubri": "Dhubri",
+    "Kamrup Metropolitan": "Guwahati",
+    "Goalpara": "Goalpara",
+    "Dima Hasao": "Dharamtul",
+    "Cachar": "Silchar",
+    "Karimganj": "Silchar",
+    "Hailakandi": "Silchar",
+    "Charaideo": "Dibrugarh",
+    "Majuli": "Neamatighat",
+    "Biswanath": "Tezpur",
+    "Hojai": "Dharamtul",
+    "South Salmara Mancachar": "Dhubri",
+    "Karbi Anglong": "Numaligarh",
+    "West Karbi Anglong": "Dharamtul"
+  },
+  "share_of_affected_people_in_warned_months": 0.509
+}

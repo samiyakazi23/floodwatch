@@ -1,0 +1,139 @@
+{
+ "forecast": {
+  "1": {
+   "hit_rate": 0.911,
+   "false_alarm_ratio": 0.118,
+   "csi": 0.812,
+   "persistence_csi": 0.729
+  },
+  "2": {
+   "hit_rate": 0.785,
+   "false_alarm_ratio": 0.096,
+   "csi": 0.725,
+   "persistence_csi": 0.648
+  },
+  "3": {
+   "hit_rate": 0.746,
+   "false_alarm_ratio": 0.19,
+   "csi": 0.635,
+   "persistence_csi": 0.585
+  },
+  "5": {
+   "hit_rate": 0.583,
+   "false_alarm_ratio": 0.199,
+   "csi": 0.51,
+   "persistence_csi": 0.489
+  },
+  "7": {
+   "hit_rate": 0.54,
+   "false_alarm_ratio": 0.266,
+   "csi": 0.451,
+   "persistence_csi": 0.42
+  }
+ },
+ "events": {
+  "n_onsets": 62,
+  "warned_1plus_days": 0.581,
+  "warned_3plus_days": 0.065,
+  "median_lead_days": 1.0
+ },
+ "impact_loyo": {
+  "unit": "district-month, May-Oct 2021-2026 (leave-one-year-out)",
+  "n": 1155,
+  "impact_model": {
+   "hit_rate": 0.627,
+   "false_alarm_ratio": 0.461,
+   "csi": 0.408,
+   "flooded": 311,
+   "warned": 362
+  },
+  "river_forecast_only": {
+   "hit_rate": 0.434,
+   "false_alarm_ratio": 0.435,
+   "csi": 0.325,
+   "flooded": 311,
+   "warned": 239
+  },
+  "river_observed_above_warning": {
+   "hit_rate": 0.373,
+   "false_alarm_ratio": 0.414,
+   "csi": 0.295,
+   "flooded": 311,
+   "warned": 198
+  },
+  "district_history_only": {
+   "hit_rate": 0.415,
+   "false_alarm_ratio": 0.469,
+   "csi": 0.304,
+   "flooded": 311,
+   "warned": 243
+  },
+  "climatology_jun_jul": {
+   "hit_rate": 0.55,
+   "false_alarm_ratio": 0.568,
+   "csi": 0.319,
+   "flooded": 311,
+   "warned": 396
+  },
+  "per_year_impact_csi": {
+   "2021": 0.368,
+   "2022": 0.374,
+   "2023": 0.467,
+   "2024": 0.427,
+   "2025": 0.384,
+   "2026": 0.434
+  },
+  "share_of_affected_people_in_warned_months": 0.692
+ },
+ "impact_strict": {
+  "unit": "district-month May-Oct, 2022-2026, trained on past years only",
+  "impact_model": {
+   "hit_rate": 0.588,
+   "false_alarm_ratio": 0.533,
+   "csi": 0.352,
+   "flooded": 267,
+   "warned": 336
+  },
+  "river_forecast_only": {
+   "hit_rate": 0.431,
+   "false_alarm_ratio": 0.442,
+   "csi": 0.321,
+   "flooded": 267,
+   "warned": 206
+  },
+  "climatology_jun_jul": {
+   "hit_rate": 0.61,
+   "false_alarm_ratio": 0.506,
+   "csi": 0.376,
+   "flooded": 267,
+   "warned": 330
+  },
+  "per_year": {
+   "2022": 0.127,
+   "2023": 0.466,
+   "2024": 0.469,
+   "2025": 0.288,
+   "2026": 0.407
+  }
+ },
+ "segmentation": {
+  "unet": {
+   "water_iou": 0.6512,
+   "precision": 0.7647,
+   "recall": 0.8144,
+   "accuracy": 0.9454
+  },
+  "otsu_baseline": {
+   "water_iou": 0.2299,
+   "precision": 0.2531,
+   "recall": 0.7144,
+   "accuracy": 0.7006
+  },
+  "bolivia": {
+   "water_iou": 0.6313,
+   "precision": 0.776,
+   "recall": 0.772,
+   "accuracy": 0.9285
+  }
+ }
+}

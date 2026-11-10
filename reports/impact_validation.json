@@ -1,0 +1,48 @@
+{
+  "unit": "district-month, May-Oct 2021-2026 (leave-one-year-out)",
+  "n": 1155,
+  "impact_model": {
+    "hit_rate": 0.627,
+    "false_alarm_ratio": 0.461,
+    "csi": 0.408,
+    "flooded": 311,
+    "warned": 362
+  },
+  "river_forecast_only": {
+    "hit_rate": 0.434,
+    "false_alarm_ratio": 0.435,
+    "csi": 0.325,
+    "flooded": 311,
+    "warned": 239
+  },
+  "river_observed_above_warning": {
+    "hit_rate": 0.373,
+    "false_alarm_ratio": 0.414,
+    "csi": 0.295,
+    "flooded": 311,
+    "warned": 198
+  },
+  "district_history_only": {
+    "hit_rate": 0.415,
+    "false_alarm_ratio": 0.469,
+    "csi": 0.304,
+    "flooded": 311,
+    "warned": 243
+  },
+  "climatology_jun_jul": {
+    "hit_rate": 0.55,
+    "false_alarm_ratio": 0.568,
+    "csi": 0.319,
+    "flooded": 311,
+    "warned": 396
+  },
+  "per_year_impact_csi": {
+    "2021": 0.368,
+    "2022": 0.374,
+    "2023": 0.467,
+    "2024": 0.427,
+    "2025": 0.384,
+    "2026": 0.434
+  },
+  "share_of_affected_people_in_warned_months": 0.692
+}

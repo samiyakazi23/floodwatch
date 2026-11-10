@@ -1,0 +1,110 @@
+{
+  "Dibrugarh": {
+    "river": "Brahmaputra",
+    "station_lat": 27.48,
+    "station_lon": 94.91,
+    "cell_lat": 27.475006,
+    "cell_lon": 94.775024,
+    "n_days": 10904,
+    "max_q": 38546.83
+  },
+  "Neamatighat": {
+    "river": "Brahmaputra",
+    "station_lat": 26.82,
+    "station_lon": 94.25,
+    "cell_lat": 26.875,
+    "cell_lon": 94.125,
+    "n_days": 10904,
+    "max_q": 42168.65
+  },
+  "Tezpur": {
+    "river": "Brahmaputra",
+    "station_lat": 26.6,
+    "station_lon": 92.8,
+    "cell_lat": 26.575005,
+    "cell_lon": 92.625,
+    "n_days": 10904,
+    "max_q": 58343.49
+  },
+  "Guwahati": {
+    "river": "Brahmaputra",
+    "station_lat": 26.18,
+    "station_lon": 91.74,
+    "cell_lat": 26.175003,
+    "cell_lon": 91.57501,
+    "n_days": 10904,
+    "max_q": 68075.96
+  },
+  "Goalpara": {
+    "river": "Brahmaputra",
+    "station_lat": 26.17,
+    "station_lon": 90.62,
+    "cell_lat": 26.225006,
+    "cell_lon": 90.475006,
+    "n_days": 10904,
+    "max_q": 85112.77
+  },
+  "Dhubri": {
+    "river": "Brahmaputra",
+    "station_lat": 26.02,
+    "station_lon": 89.98,
+    "cell_lat": 25.875,
+    "cell_lon": 89.82501,
+    "n_days": 10904,
+    "max_q": 90156.1
+  },
+  "Badatighat": {
+    "river": "Subansiri",
+    "station_lat": 27.08,
+    "station_lon": 94.1,
+    "cell_lat": 27.025002,
+    "cell_lon": 94.025024,
+    "n_days": 10904,
+    "max_q": 9816.48
+  },
+  "Jia Bharali": {
+    "river": "Jia Bharali",
+    "station_lat": 26.8,
+    "station_lon": 92.85,
+    "cell_lat": 26.725006,
+    "cell_lon": 92.82501,
+    "n_days": 10904,
+    "max_q": 7602.26
+  },
+  "Numaligarh": {
+    "river": "Dhansiri",
+    "station_lat": 26.6,
+    "station_lon": 93.73,
+    "cell_lat": 26.675003,
+    "cell_lon": 93.625,
+    "n_days": 10904,
+    "max_q": 5080.6
+  },
+  "Dharamtul": {
+    "river": "Kopili",
+    "station_lat": 26.2,
+    "station_lon": 92.38,
+    "cell_lat": 26.175003,
+    "cell_lon": 92.225006,
+    "n_days": 10904,
+    "max_q": 7293.57
+  },
+  "Beki Road": {
+    "river": "Beki/Manas",
+    "station_lat": 26.4,
+    "station_lon": 90.95,
+    "cell_lat": 26.275002,
+    "cell_lon": 90.82501,
+    "n_days": 10904,
+    "max_q": 11039.79
+  },
+  "Silchar": {
+    "river": "Barak",
+    "station_lat": 24.82,
+    "station_lon": 92.8,
+    "cell_lat": 24.825005,
+    "cell_lon": 92.625,
+    "n_days": 10904,
+    "max_q": 3654.95
+  }
+}

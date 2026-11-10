@@ -1,0 +1,4 @@
+-r requirements.txt
+torch>=2.2
+segmentation-models-pytorch>=0.3
+rasterio>=1.3
