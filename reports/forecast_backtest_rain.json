@@ -1,0 +1,608 @@
+{
+  "stations": [
+    "Dibrugarh",
+    "Neamatighat",
+    "Tezpur",
+    "Guwahati",
+    "Goalpara",
+    "Dhubri",
+    "Badatighat",
+    "Jia Bharali",
+    "Numaligarh",
+    "Dharamtul",
+    "Beki Road",
+    "Silchar"
+  ],
+  "test_years": [
+    2021,
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+  ],
+  "level": "warning",
+  "target": "flood level reached within the next h days",
+  "horizons": {
+    "1": {
+      "model": {
+        "hit_rate": 0.904,
+        "false_alarm_ratio": 0.098,
+        "csi": 0.823,
+        "flood_days": 427,
+        "warnings": 428
+      },
+      "persistence_baseline": {
+        "hit_rate": 0.843,
+        "false_alarm_ratio": 0.157,
+        "csi": 0.729,
+        "flood_days": 427,
+        "warnings": 427
+      },
+      "near_threshold_baseline": {
+        "hit_rate": 0.958,
+        "false_alarm_ratio": 0.498,
+        "csi": 0.491,
+        "flood_days": 427,
+        "warnings": 815
+      },
+      "model_monsoon_only": {
+        "hit_rate": 0.904,
+        "false_alarm_ratio": 0.098,
+        "csi": 0.823,
+        "flood_days": 427,
+        "warnings": 428
+      },
+      "pr_auc": 0.969,
+      "brier": 0.0024
+    },
+    "2": {
+      "model": {
+        "hit_rate": 0.804,
+        "false_alarm_ratio": 0.12,
+        "csi": 0.724,
+        "flood_days": 494,
+        "warnings": 451
+      },
+      "persistence_baseline": {
+        "hit_rate": 0.733,
+        "false_alarm_ratio": 0.152,
+        "csi": 0.648,
+        "flood_days": 494,
+        "warnings": 427
+      },
+      "near_threshold_baseline": {
+        "hit_rate": 0.858,
+        "false_alarm_ratio": 0.48,
+        "csi": 0.479,
+        "flood_days": 494,
+        "warnings": 815
+      },
+      "model_monsoon_only": {
+        "hit_rate": 0.804,
+        "false_alarm_ratio": 0.12,
+        "csi": 0.724,
+        "flood_days": 494,
+        "warnings": 451
+      },
+      "pr_auc": 0.908,
+      "brier": 0.0048
+    },
+    "3": {
+      "model": {
+        "hit_rate": 0.732,
+        "false_alarm_ratio": 0.165,
+        "csi": 0.639,
+        "flood_days": 559,
+        "warnings": 490
+      },
+      "persistence_baseline": {
+        "hit_rate": 0.651,
+        "false_alarm_ratio": 0.148,
+        "csi": 0.585,
+        "flood_days": 559,
+        "warnings": 427
+      },
+      "near_threshold_baseline": {
+        "hit_rate": 0.776,
+        "false_alarm_ratio": 0.467,
+        "csi": 0.462,
+        "flood_days": 559,
+        "warnings": 815
+      },
+      "model_monsoon_only": {
+        "hit_rate": 0.732,
+        "false_alarm_ratio": 0.165,
+        "csi": 0.639,
+        "flood_days": 559,
+        "warnings": 490
+      },
+      "pr_auc": 0.836,
+      "brier": 0.0072
+    },
+    "5": {
+      "model": {
+        "hit_rate": 0.654,
+        "false_alarm_ratio": 0.311,
+        "csi": 0.505,
+        "flood_days": 684,
+        "warnings": 649
+      },
+      "persistence_baseline": {
+        "hit_rate": 0.534,
+        "false_alarm_ratio": 0.145,
+        "csi": 0.489,
+        "flood_days": 684,
+        "warnings": 427
+      },
+      "near_threshold_baseline": {
+        "hit_rate": 0.64,
+        "false_alarm_ratio": 0.463,
+        "csi": 0.413,
+        "flood_days": 684,
+        "warnings": 815
+      },
+      "model_monsoon_only": {
+        "hit_rate": 0.654,
+        "false_alarm_ratio": 0.311,
+        "csi": 0.505,
+        "flood_days": 684,
+        "warnings": 649
+      },
+      "pr_auc": 0.733,
+      "brier": 0.0119
+    },
+    "7": {
+      "model": {
+        "hit_rate": 0.587,
+        "false_alarm_ratio": 0.393,
+        "csi": 0.425,
+        "flood_days": 808,
+        "warnings": 781
+      },
+      "persistence_baseline": {
+        "hit_rate": 0.452,
+        "false_alarm_ratio": 0.145,
+        "csi": 0.42,
+        "flood_days": 808,
+        "warnings": 427
+      },
+      "near_threshold_baseline": {
+        "hit_rate": 0.548,
+        "false_alarm_ratio": 0.456,
+        "csi": 0.375,
+        "flood_days": 808,
+        "warnings": 815
+      },
+      "model_monsoon_only": {
+        "hit_rate": 0.587,
+        "false_alarm_ratio": 0.393,
+        "csi": 0.425,
+        "flood_days": 808,
+        "warnings": 781
+      },
+      "pr_auc": 0.66,
+      "brier": 0.0165
+    }
+  },
+  "events": {
+    "n_onsets": 62,
+    "warned_1plus_days": 0.548,
+    "warned_3plus_days": 0.177,
+    "median_lead_days": 1.0,
+    "list": [
+      {
+        "station": "Badatighat",
+        "onset": "2021-08-26",
+        "warned_days_ahead": 1,
+        "peak_q": 9527
+      },
+      {
+        "station": "Badatighat",
+        "onset": "2023-06-15",
+        "warned_days_ahead": 0,
+        "peak_q": 8278
+      },
+      {
+        "station": "Badatighat",
+        "onset": "2023-08-28",
+        "warned_days_ahead": 1,
+        "peak_q": 7655
+      },
+      {
+        "station": "Badatighat",
+        "onset": "2024-06-30",
+        "warned_days_ahead": 1,
+        "peak_q": 7744
+      },
+      {
+        "station": "Beki Road",
+        "onset": "2021-08-26",
+        "warned_days_ahead": 1,
+        "peak_q": 7708
+      },
+      {
+        "station": "Beki Road",
+        "onset": "2022-06-17",
+        "warned_days_ahead": 2,
+        "peak_q": 8809
+      },
+      {
+        "station": "Beki Road",
+        "onset": "2023-06-15",
+        "warned_days_ahead": 0,
+        "peak_q": 7243
+      },
+      {
+        "station": "Beki Road",
+        "onset": "2023-07-13",
+        "warned_days_ahead": 1,
+        "peak_q": 7046
+      },
+      {
+        "station": "Dharamtul",
+        "onset": "2022-06-17",
+        "warned_days_ahead": 2,
+        "peak_q": 4120
+      },
+      {
+        "station": "Dharamtul",
+        "onset": "2024-05-29",
+        "warned_days_ahead": 0,
+        "peak_q": 4101
+      },
+      {
+        "station": "Dharamtul",
+        "onset": "2024-06-19",
+        "warned_days_ahead": 0,
+        "peak_q": 5247
+      },
+      {
+        "station": "Dharamtul",
+        "onset": "2024-07-01",
+        "warned_days_ahead": 0,
+        "peak_q": 5247
+      },
+      {
+        "station": "Dharamtul",
+        "onset": "2024-08-21",
+        "warned_days_ahead": 0,
+        "peak_q": 5382
+      },
+      {
+        "station": "Dharamtul",
+        "onset": "2025-06-01",
+        "warned_days_ahead": 1,
+        "peak_q": 3647
+      },
+      {
+        "station": "Dhubri",
+        "onset": "2021-08-27",
+        "warned_days_ahead": 1,
+        "peak_q": 61517
+      },
+      {
+        "station": "Dhubri",
+        "onset": "2022-06-16",
+        "warned_days_ahead": 1,
+        "peak_q": 74644
+      },
+      {
+        "station": "Dhubri",
+        "onset": "2022-06-29",
+        "warned_days_ahead": 7,
+        "peak_q": 56363
+      },
+      {
+        "station": "Dhubri",
+        "onset": "2024-07-01",
+        "warned_days_ahead": 7,
+        "peak_q": 76735
+      },
+      {
+        "station": "Dhubri",
+        "onset": "2025-06-02",
+        "warned_days_ahead": 0,
+        "peak_q": 65312
+      },
+      {
+        "station": "Dibrugarh",
+        "onset": "2021-08-26",
+        "warned_days_ahead": 0,
+        "peak_q": 24945
+      },
+      {
+        "station": "Dibrugarh",
+        "onset": "2022-06-17",
+        "warned_days_ahead": 5,
+        "peak_q": 26852
+      },
+      {
+        "station": "Dibrugarh",
+        "onset": "2022-06-27",
+        "warned_days_ahead": 2,
+        "peak_q": 26852
+      },
+      {
+        "station": "Dibrugarh",
+        "onset": "2023-08-28",
+        "warned_days_ahead": 0,
+        "peak_q": 25526
+      },
+      {
+        "station": "Dibrugarh",
+        "onset": "2024-06-30",
+        "warned_days_ahead": 5,
+        "peak_q": 31768
+      },
+      {
+        "station": "Dibrugarh",
+        "onset": "2025-06-01",
+        "warned_days_ahead": 0,
+        "peak_q": 31260
+      },
+      {
+        "station": "Goalpara",
+        "onset": "2021-08-27",
+        "warned_days_ahead": 1,
+        "peak_q": 59703
+      },
+      {
+        "station": "Goalpara",
+        "onset": "2022-06-16",
+        "warned_days_ahead": 1,
+        "peak_q": 71449
+      },
+      {
+        "station": "Goalpara",
+        "onset": "2022-06-29",
+        "warned_days_ahead": 7,
+        "peak_q": 55080
+      },
+      {
+        "station": "Goalpara",
+        "onset": "2024-06-30",
+        "warned_days_ahead": 5,
+        "peak_q": 74301
+      },
+      {
+        "station": "Goalpara",
+        "onset": "2025-06-01",
+        "warned_days_ahead": 0,
+        "peak_q": 63095
+      },
+      {
+        "station": "Guwahati",
+        "onset": "2021-08-27",
+        "warned_days_ahead": 1,
+        "peak_q": 48864
+      },
+      {
+        "station": "Guwahati",
+        "onset": "2022-06-16",
+        "warned_days_ahead": 1,
+        "peak_q": 53702
+      },
+      {
+        "station": "Guwahati",
+        "onset": "2022-06-29",
+        "warned_days_ahead": 5,
+        "peak_q": 45393
+      },
+      {
+        "station": "Guwahati",
+        "onset": "2023-08-29",
+        "warned_days_ahead": 2,
+        "peak_q": 47097
+      },
+      {
+        "station": "Guwahati",
+        "onset": "2024-06-30",
+        "warned_days_ahead": 0,
+        "peak_q": 61658
+      },
+      {
+        "station": "Guwahati",
+        "onset": "2025-06-01",
+        "warned_days_ahead": 0,
+        "peak_q": 53826
+      },
+      {
+        "station": "Jia Bharali",
+        "onset": "2021-08-26",
+        "warned_days_ahead": 0,
+        "peak_q": 6265
+      },
+      {
+        "station": "Jia Bharali",
+        "onset": "2022-06-16",
+        "warned_days_ahead": 1,
+        "peak_q": 5104
+      },
+      {
+        "station": "Jia Bharali",
+        "onset": "2023-06-15",
+        "warned_days_ahead": 0,
+        "peak_q": 5046
+      },
+      {
+        "station": "Neamatighat",
+        "onset": "2021-08-27",
+        "warned_days_ahead": 1,
+        "peak_q": 27226
+      },
+      {
+        "station": "Neamatighat",
+        "onset": "2022-06-16",
+        "warned_days_ahead": 1,
+        "peak_q": 29308
+      },
+      {
+        "station": "Neamatighat",
+        "onset": "2022-06-27",
+        "warned_days_ahead": 2,
+        "peak_q": 28839
+      },
+      {
+        "station": "Neamatighat",
+        "onset": "2023-07-13",
+        "warned_days_ahead": 7,
+        "peak_q": 26181
+      },
+      {
+        "station": "Neamatighat",
+        "onset": "2023-08-28",
+        "warned_days_ahead": 0,
+        "peak_q": 28773
+      },
+      {
+        "station": "Neamatighat",
+        "onset": "2024-06-30",
+        "warned_days_ahead": 5,
+        "peak_q": 35480
+      },
+      {
+        "station": "Neamatighat",
+        "onset": "2025-06-01",
+        "warned_days_ahead": 0,
+        "peak_q": 34913
+      },
+      {
+        "station": "Neamatighat",
+        "onset": "2025-06-26",
+        "warned_days_ahead": 0,
+        "peak_q": 26606
+      },
+      {
+        "station": "Numaligarh",
+        "onset": "2022-06-16",
+        "warned_days_ahead": 1,
+        "peak_q": 2785
+      },
+      {
+        "station": "Numaligarh",
+        "onset": "2024-07-02",
+        "warned_days_ahead": 0,
+        "peak_q": 3572
+      },
+      {
+        "station": "Numaligarh",
+        "onset": "2024-08-21",
+        "warned_days_ahead": 0,
+        "peak_q": 2691
+      },
+      {
+        "station": "Numaligarh",
+        "onset": "2025-05-31",
+        "warned_days_ahead": 0,
+        "peak_q": 2715
+      },
+      {
+        "station": "Numaligarh",
+        "onset": "2026-07-20",
+        "warned_days_ahead": 0,
+        "peak_q": 3458
+      },
+      {
+        "station": "Silchar",
+        "onset": "2024-07-03",
+        "warned_days_ahead": 0,
+        "peak_q": 1737
+      },
+      {
+        "station": "Silchar",
+        "onset": "2025-07-02",
+        "warned_days_ahead": 0,
+        "peak_q": 2017
+      },
+      {
+        "station": "Silchar",
+        "onset": "2026-07-12",
+        "warned_days_ahead": 1,
+        "peak_q": 1962
+      },
+      {
+        "station": "Tezpur",
+        "onset": "2021-08-27",
+        "warned_days_ahead": 1,
+        "peak_q": 45393
+      },
+      {
+        "station": "Tezpur",
+        "onset": "2022-06-16",
+        "warned_days_ahead": 0,
+        "peak_q": 46131
+      },
+      {
+        "station": "Tezpur",
+        "onset": "2022-06-28",
+        "warned_days_ahead": 5,
+        "peak_q": 40831
+      },
+      {
+        "station": "Tezpur",
+        "onset": "2023-06-16",
+        "warned_days_ahead": 0,
+        "peak_q": 39627
+      },
+      {
+        "station": "Tezpur",
+        "onset": "2023-08-28",
+        "warned_days_ahead": 0,
+        "peak_q": 43450
+      },
+      {
+        "station": "Tezpur",
+        "onset": "2024-06-30",
+        "warned_days_ahead": 5,
+        "peak_q": 52239
+      },
+      {
+        "station": "Tezpur",
+        "onset": "2025-06-01",
+        "warned_days_ahead": 0,
+        "peak_q": 47752
+      }
+    ]
+  },
+  "cutoffs": {
+    "2021_h1": 0.225,
+    "2021_h2": 0.275,
+    "2021_h3": 0.175,
+    "2021_h5": 0.15,
+    "2021_h7": 0.325,
+    "2022_h1": 0.15,
+    "2022_h2": 0.1,
+    "2022_h3": 0.1,
+    "2022_h5": 0.1,
+    "2022_h7": 0.075,
+    "2023_h1": 0.25,
+    "2023_h2": 0.25,
+    "2023_h3": 0.225,
+    "2023_h5": 0.125,
+    "2023_h7": 0.125,
+    "2024_h1": 0.3,
+    "2024_h2": 0.375,
+    "2024_h3": 0.175,
+    "2024_h5": 0.125,
+    "2024_h7": 0.175,
+    "2025_h1": 0.475,
+    "2025_h2": 0.4,
+    "2025_h3": 0.5,
+    "2025_h5": 0.375,
+    "2025_h7": 0.525,
+    "2026_h1": 0.4,
+    "2026_h2": 0.425,
+    "2026_h3": 0.45,
+    "2026_h5": 0.45,
+    "2026_h7": 0.7
+  },
+  "per_year_csi_3day": {
+    "2021": 0.667,
+    "2022": 0.515,
+    "2023": 0.194,
+    "2024": 0.714,
+    "2025": 0.642,
+    "2026": 0.905
+  }
+}
