@@ -34,7 +34,7 @@ fmeta = json.loads(Path("reports/forecast_backtest.json").read_text())
 
 # 3. daily station series, monsoon months, from the walk-forward backtest
 p = pd.read_csv("reports/backtest_predictions.csv.gz", parse_dates=["date"])
-p = p[p.date.dt.month.between(5, 10)]
+# all months, so any date in 2021-2026 can be checked
 daily = {}
 for s, g in p.groupby("station_name"):
     g = g.sort_values("date")

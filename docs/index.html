@@ -58,7 +58,17 @@ h1,h2,h3{font-family:"Bricolage Grotesque",sans-serif;line-height:1.1;margin:0}
 .years button{font:inherit;font-size:14px;border:1px solid var(--line);background:transparent;color:var(--ink);padding:4px 11px;border-radius:999px;cursor:pointer}
 .years button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .lead{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-2)}
-.lead select{font:inherit;font-size:14px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:4px 8px}
+.lead select,.lead input{font:inherit;font-size:14px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:4px 8px}
+.lead input{color-scheme:light dark}
+.check{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--paper);font-size:15px;line-height:1.5}
+.check b{font-weight:700}
+.tally{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:6px;font-size:14px;color:var(--ink-2)}
+.tally span b{color:var(--ink)}
+.outcome{display:inline-block;font-weight:700;font-size:14px;padding:2px 9px;border-radius:999px;margin:8px 0 2px}
+.o-hit{background:color-mix(in srgb,var(--paddy) 22%,transparent);color:var(--paddy)}
+.o-quiet{background:color-mix(in srgb,var(--paddy) 14%,transparent);color:var(--paddy)}
+.o-miss,.o-false{background:color-mix(in srgb,var(--reported) 16%,transparent);color:var(--reported)}
+.o-na{background:var(--line);color:var(--ink-2)}
 #map{width:100%;height:auto;display:block;margin-top:6px}
 #map .d{stroke:var(--panel);stroke-width:.8;cursor:pointer;transition:fill .25s}
 @media (prefers-reduced-motion:reduce){#map .d{transition:none}}
@@ -165,6 +175,9 @@ footer p{max-width:80ch;margin:0 0 8px}
     <div class="mapbox">
       <div class="controls">
         <div class="years" role="group" aria-label="Monsoon year" id="years"></div>
+        <label class="lead">Check a date
+          <input type="date" id="pick" aria-label="Pick any date from 2021 to 2026">
+        </label>
         <label class="lead">Forecast
           <select id="lead" aria-label="Forecast lead time">
             <option value="1">1 day ahead</option><option value="2">2 days ahead</option>
@@ -182,6 +195,7 @@ footer p{max-width:80ch;margin:0 0 8px}
         <span class="ramp" aria-hidden="true">Chance of flooding <i style="background:var(--w0)"></i><i style="background:var(--w1)"></i><i style="background:var(--w2)"></i><i style="background:var(--w3)"></i><i style="background:var(--w4)"></i></span>
         <span><span class="swatch-rep" aria-hidden="true"></span>ASDMA reported 1,000+ people affected that month</span>
       </div>
+      <div class="check" id="check" aria-live="polite"></div>
     </div>
 
     <aside class="side" id="side" aria-live="polite">
@@ -298,6 +312,16 @@ function riskOf(st){if(year==="Today"){const r=live.stations[st];return scale(r.
 function warned(st){if(year==="Today"){const r=live.stations[st];return r.p[lead]>=r.cut[lead]}
   const s=daily[st];const i=dates[dayIdx][1];return s["p"+lead][i]>=s["c"+lead][i]}
 const monthNow=()=>year==="Today"?0:+dates[dayIdx][0].slice(5,7);
+// what actually happened: did the river reach its warning level in the next `lead` days?
+function observed(st){const s=daily[st];const i=dates[dayIdx][1];
+  if(i+lead>=s.q.length)return null;
+  for(let k=1;k<=lead;k++){if(s.q[i+k]>s.thr[i+k])return true}return false}
+function outcome(st){const o=observed(st),w=warned(st);
+  if(o===null)return {k:"na",t:"Too recent to check"};
+  if(w&&o)return {k:"hit",t:"Correct warning"};
+  if(w&&!o)return {k:"false",t:"False alarm"};
+  if(!w&&o)return {k:"miss",t:"Missed flood"};
+  return {k:"quiet",t:"Correctly no warning"}}
 
 /* ---------- controls ---------- */
 const yb=d3.select("#years").selectAll("button").data(YEARS).join("button").text(d=>d)
@@ -306,8 +330,13 @@ function setRange(){const r=$("#day");yb.attr("aria-pressed",d=>d===year);
   document.querySelector(".timeline").style.visibility=year==="Today"?"hidden":"visible";
   if(year!=="Today"){r.max=dates.length-1;r.value=dayIdx}}
 $("#day").addEventListener("input",e=>{dayIdx=+e.target.value;update()});
+const allDates=daily[anyStation].date;
+$("#pick").min=allDates[0];$("#pick").max=allDates[allDates.length-1];
+$("#pick").addEventListener("change",e=>{const v=e.target.value;if(!v)return;
+  const y=+v.slice(0,4);if(!YEARS.includes(y)){return}
+  year=y;dates=datesFor(y);const j=dates.findIndex(([d])=>d===v);if(j<0)return;dayIdx=j;setRange();update()});
 $("#lead").addEventListener("change",e=>{lead=+e.target.value;update()});
-$("#play").addEventListener("click",()=>{
+$("#play").addEventListener("click",()=>{if(year==="Today")return;
   if(timer){clearInterval(timer);timer=null;$("#play").textContent="▶";$("#play").setAttribute("aria-label","Play the monsoon");return}
   $("#play").textContent="❚❚";$("#play").setAttribute("aria-label","Pause");
   timer=setInterval(()=>{dayIdx=(dayIdx+1)%dates.length;$("#day").value=dayIdx;update()},matchMedia("(prefers-reduced-motion: reduce)").matches?600:160)});
@@ -340,12 +369,13 @@ function side(){
   $("#side").innerHTML=`
     <h2>${sel}</h2>
     <p class="sub">Watched by the ${st} gauge on the ${stations[st].river}</p>
-    <div class="verdict">${verdict}<br>${reported}</div>
+    <div class="verdict">${verdict}<br>${(()=>{const o=outcome(st);return `<span class="outcome o-${o.k}">${o.t}</span>`})()}
+      <br>What happened: ${observed(st)===null?"not known yet":observed(st)?`the river reached its warning level within ${lead} day${lead>1?"s":""}.`:`the river stayed below its warning level for the next ${lead} day${lead>1?"s":""}.`}<br>${reported}</div>
     <h3>Forecast chance of flooding, made ${prettyDate(dates[dayIdx][0])}</h3>
     <div class="bars">${bars}</div>
     <p class="note">Darker bars crossed the alert line, tuned on past years only.</p>
     ${impact}
-    <h3>River flow this monsoon</h3>
+    <h3>River flow in ${year}</h3>
     <svg id="hydro" viewBox="0 0 300 120" role="img" aria-label="River flow at ${st} compared with its warning level"></svg>
     <p class="note">Today ${fmt(flowNow)} m³/s, ${pct}% of the warning level (dashed line).</p>`;
   // hydrograph
@@ -356,13 +386,24 @@ function side(){
   h.append("path").attr("class","hy-q").attr("d",d3.line().x((d,k)=>x(k)).y(d=>y(d))(q));
   h.append("line").attr("class","hy-thr").attr("x1",4).attr("x2",296).attr("y1",y(thr)).attr("y2",y(thr));
   h.append("line").attr("class","hy-now").attr("x1",x(dayIdx)).attr("x2",x(dayIdx)).attr("y1",4).attr("y2",104);
-  ["May","Jun","Jul","Aug","Sep","Oct"].forEach((mn,k)=>{const j=dates.findIndex(([d])=>+d.slice(5,7)===k+5);if(j>=0)h.append("text").attr("class","hy-ax").attr("x",x(j)).attr("y",117).text(mn)});
+  ["Jan","Mar","May","Jul","Sep","Nov"].forEach((mn)=>{const mm=MONTHS.indexOf(mn)+1;const j=dates.findIndex(([d])=>+d.slice(5,7)===mm);if(j>=0)h.append("text").attr("class","hy-ax").attr("x",x(j)).attr("y",117).text(mn)});
 }
 
+function checkBox(){
+  if(year==="Today"){$("#check").innerHTML=`Live forecast for <b>${prettyDate(live.issued)}</b>. Pick a past date above to see how the forecasts turned out.`;return}
+  const st=Object.keys(daily), out=st.map(outcome), c=k=>out.filter(o=>o.k===k).length;
+  const m=monthNow(), rep=geo.features.filter(f=>(impactKey[`${f.properties.name}|${year}|${m}`]||{}).pop>=1000).length;
+  const flooded=c("hit")+c("miss");
+  $("#check").innerHTML=c("na")===st.length?`<b>${prettyDate(dates[dayIdx][0])}</b>: too recent to check what happened next.`:
+    `<b>${prettyDate(dates[dayIdx][0])}</b>, ${lead}-day forecast: ${flooded} of ${st.length} river stations reached flood level in the next ${lead} day${lead>1?"s":""}${flooded?`, and the forecast warned for ${c("hit")} of them`:""}. ASDMA reported 1,000+ people affected in ${rep} district${rep===1?"":"s"} that month.
+    <div class="tally"><span><b>${c("hit")}</b> correct warnings</span><span><b>${c("miss")}</b> missed</span><span><b>${c("false")}</b> false alarms</span><span><b>${c("quiet")}</b> correctly quiet</span></div>`;
+}
 function update(){
   $("#date").textContent=year==="Today"?prettyDate(live.issued):prettyDate(dates[dayIdx][0]);
   const m=monthNow();
   dSel.attr("fill",f=>color(riskOf(f.properties.station))).classed("sel",f=>f.properties.name===sel);
+  checkBox();
+  $("#pick").value=year==="Today"?live.issued:dates[dayIdx][0];
   repSel.attr("display",f=>{if(year==="Today")return "none";const r=impactKey[`${f.properties.name}|${year}|${m}`];return r&&r.pop>=1000?null:"none"});
   side();
 }
