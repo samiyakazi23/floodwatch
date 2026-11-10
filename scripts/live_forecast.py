@@ -58,13 +58,17 @@ def main() -> None:
             model = lgb.Booster(model_file=str(ROOT / f"models/forecast_h{h}.txt"))
             rec["p"][str(h)] = round(float(model.predict(pd.DataFrame([row[meta["features"]]]).astype(float))[0]), 3)
             rec["cut"][str(h)] = round(meta["cutoffs"][str(h)], 3)
+        hist = flows[s].dropna()
+        rec["history"] = {"date": [d.strftime("%Y-%m-%d") for d in hist.index], "q": [round(float(v)) for v in hist.values]}
+        rec["river"] = stations[s]["river"]
         out["stations"][s] = rec
     dest = ROOT / "docs/data/live.json"
     dest.write_text(json.dumps(out, indent=1))
     # keep an append-only log of every issued forecast, for scoring the 2027 monsoon later
     log = ROOT / "docs/data/live_log.jsonl"
+    slim = {"issued": out["issued"], "stations": {k: {"q": v["q"], "p": v["p"]} for k, v in out["stations"].items()}}
     with open(log, "a") as f:
-        f.write(json.dumps(out) + "\n")
+        f.write(json.dumps(slim) + "\n")
     warned = [s for s, r in out["stations"].items() if r["p"]["3"] >= r["cut"]["3"]]
     print(f"forecast issued for {out['issued']}; 3-day warnings at: {', '.join(warned) or 'none'}")
 

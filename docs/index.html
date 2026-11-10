@@ -4,252 +4,392 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FloodWatch Assam</title>
-<meta name="description" content="Flood forecasts for Assam's districts, tested on six monsoons against ASDMA's reports, plus satellite flood mapping.">
+<meta name="description" content="Flood forecasts for Assam's rivers and districts, 1–7 days ahead, tested on six monsoons against ASDMA's reports.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#e9eeec; --panel:#f6f8f7; --ink:#1c3442; --ink-2:#4b6270; --line:#c9d3d0;
-  --silt:#a8873f; --paddy:#5f7f36; --reported:#a3242e;
-  --w0:#dde8ec; --w1:#a9cbe0; --w2:#5f9ccb; --w3:#2b67a3; --w4:#173f74;
-  --focus:#a8873f;
+  --bg:#f2f6f5; --surface:#ffffff; --ink:#0f2420; --ink-2:#526661; --line:#dce5e2;
+  --brand-900:#06302c; --brand-700:#0b5d55; --brand:#0f766e; --brand-400:#2aa596; --brand-50:#e5f3f0;
+  --ok:#15803d; --ok-bg:#e7f5ec; --warn:#a85407; --warn-bg:#fdf1e0; --bad:#b91c1c; --bad-bg:#fdeceb;
+  --r0:#e4efec; --r1:#a3d1c8; --r2:#4aae9f; --r3:#147f72; --r4:#0a4740;
+  --silt:#a8873f; --shadow:0 1px 2px rgba(15,36,32,.06),0 8px 24px rgba(15,36,32,.06);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --paper:#0f1a20; --panel:#16242c; --ink:#e3ebee; --ink-2:#9db0b9; --line:#2b3d47;
-  --silt:#d1b06a; --paddy:#8fb35d; --reported:#ff6b74;
-  --w0:#1d2f39; --w1:#24506f; --w2:#2f75a8; --w3:#58a0d6; --w4:#a9d4f2;
+  --bg:#0c1715; --surface:#132220; --ink:#e4eeeb; --ink-2:#9fb3ad; --line:#24403b;
+  --brand-50:#16332f; --brand-400:#5cc7b7;
+  --ok:#5fd48a; --ok-bg:#163526; --warn:#f2b661; --warn-bg:#3a2a12; --bad:#ff8580; --bad-bg:#3c1a1a;
+  --r0:#1b2f2c; --r1:#1e5a52; --r2:#2a8a7d; --r3:#4fc0ae; --r4:#a7ecdf; --silt:#d6b673; --shadow:none;
 }}
 :root[data-theme="dark"]{
-  --paper:#0f1a20; --panel:#16242c; --ink:#e3ebee; --ink-2:#9db0b9; --line:#2b3d47;
-  --silt:#d1b06a; --paddy:#8fb35d; --reported:#ff6b74;
-  --w0:#1d2f39; --w1:#24506f; --w2:#2f75a8; --w3:#58a0d6; --w4:#a9d4f2;
+  --bg:#0c1715; --surface:#132220; --ink:#e4eeeb; --ink-2:#9fb3ad; --line:#24403b;
+  --brand-50:#16332f; --brand-400:#5cc7b7;
+  --ok:#5fd48a; --ok-bg:#163526; --warn:#f2b661; --warn-bg:#3a2a12; --bad:#ff8580; --bad-bg:#3c1a1a;
+  --r0:#1b2f2c; --r1:#1e5a52; --r2:#2a8a7d; --r3:#4fc0ae; --r4:#a7ecdf; --silt:#d6b673; --shadow:none;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.6 "IBM Plex Sans",system-ui,sans-serif}
-a{color:inherit;text-decoration-color:var(--silt);text-underline-offset:3px}
-:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:3px}
-h1,h2,h3{font-family:"Bricolage Grotesque",sans-serif;line-height:1.1;margin:0}
-.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
-@media (max-width:600px){.wrap{padding:0 16px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,sans-serif}
+a{color:var(--brand);text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--brand-400);outline-offset:2px;border-radius:4px}
+h1,h2,h3{font-family:"Bricolage Grotesque",sans-serif;margin:0;line-height:1.12}
+.wrap{max-width:1200px;margin:0 auto;padding-inline:24px}
+@media (max-width:600px){.wrap{padding-inline:16px}}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 15px "IBM Plex Sans";padding:11px 18px;border-radius:10px;text-decoration:none;cursor:pointer;border:1px solid transparent}
+.btn svg{flex:none}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.c-ok{color:var(--ok);background:var(--ok-bg)} .c-warn{color:var(--warn);background:var(--warn-bg)} .c-bad{color:var(--bad);background:var(--bad-bg)} .c-na{color:var(--ink-2);background:var(--line)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);min-width:0}
+.card h3{font-size:18px;font-weight:600}
+.card .sub{color:var(--ink-2);font-size:14px;margin:2px 0 14px}
+.muted{color:var(--ink-2)}
 
-/* top bar */
-.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:18px}
-.brand{font-family:"Bricolage Grotesque";font-weight:800;font-size:20px;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;text-decoration:none}
-.brand svg{flex:none}
-.bar nav{display:flex;gap:20px;font-size:15px}
-.bar nav a{text-decoration:none;color:var(--ink-2)}
-.bar nav a:hover{color:var(--ink)}
-@media (max-width:720px){.bar nav{display:none}}
+/* nav */
+.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:20px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font:800 19px "Bricolage Grotesque";color:var(--ink);text-decoration:none;flex:none}
+.logo i{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:linear-gradient(140deg,var(--brand-700),var(--brand-400))}
+.links{display:flex;gap:4px;flex:1;overflow-x:auto;scrollbar-width:none}
+.links a{font-size:15px;font-weight:600;color:var(--ink-2);text-decoration:none;padding:8px 12px;border-radius:9px;white-space:nowrap}
+.links a:hover{color:var(--ink)}
+.links a[aria-current="page"]{color:var(--brand);background:var(--brand-50)}
+.nav .code{flex:none;font-size:14px;padding:8px 14px;color:var(--ink);border-color:var(--line);background:var(--surface)}
+@media (max-width:600px){.nav .code{display:none}}
+@media (max-width:900px){.nav .wrap{flex-wrap:wrap;height:auto;padding-block:10px;gap:8px 16px}.links{order:3;flex-basis:100%}.nav .code{margin-left:auto}}
 
-/* hero */
-.hero{padding-block:28px 8px}
-.hero h1{font-size:clamp(34px,5.4vw,66px);font-weight:800;letter-spacing:-.025em;max-width:16ch;font-variation-settings:"opsz" 96}
-.hero p{max-width:62ch;color:var(--ink-2);font-size:18px;margin:16px 0 0}
+/* home hero */
+.hero{position:relative;color:#eaf7f4;background:linear-gradient(118deg,var(--brand-900) 0%,#0a4d46 45%,var(--brand) 100%);padding:64px 0 120px;overflow:hidden}
+.hero::after{content:"";position:absolute;left:-5%;right:-5%;bottom:-1px;height:90px;background:var(--bg);border-radius:50% 50% 0 0/100% 100% 0 0}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:center}
+@media (max-width:980px){.hero .wrap{grid-template-columns:1fr}}
+.pill{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22)}
+.pill b{width:8px;height:8px;border-radius:50%;background:#5fe0a4;box-shadow:0 0 0 4px rgba(95,224,164,.18)}
+.hero h1{font-size:clamp(40px,6vw,72px);font-weight:800;letter-spacing:-.03em;margin:20px 0 18px;color:#fff;font-variation-settings:"opsz" 96}
+.hero p.lede{font-size:19px;max-width:54ch;color:#cfe9e3;margin:0}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin:30px 0 36px}
+.btn-white{background:#fff;color:var(--brand-900)} .btn-white:hover{background:#eefaf7}
+.btn-ghost{color:#fff;border-color:rgba(255,255,255,.45)} .btn-ghost:hover{background:rgba(255,255,255,.08)}
+.stats{display:flex;flex-wrap:wrap;gap:20px 44px}
+.stats div b{display:block;font:800 28px "Bricolage Grotesque";color:#fff}
+.stats div span{font-size:14px;color:#b9ddd5}
+.outlook{background:var(--surface);color:var(--ink);border-radius:18px;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.25);border-top:5px solid var(--ok)}
+.outlook.warn{border-top-color:var(--warn)} .outlook.bad{border-top-color:var(--bad)}
+.outlook .head{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px}
+.outlook .ico{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:12px;background:var(--ok-bg);color:var(--ok)}
+.outlook.warn .ico{background:var(--warn-bg);color:var(--warn)} .outlook.bad .ico{background:var(--bad-bg);color:var(--bad)}
+.outlook small{font-size:13px;font-weight:600;color:var(--ink-2)}
+.outlook h2{font-size:21px;font-weight:600;margin:2px 0 4px}
+.outlook p{margin:0;font-size:15px;color:var(--ink-2)}
+.mini{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mini div{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:color-mix(in srgb,var(--ok-bg) 45%,var(--surface))}
+.mini div.w{background:color-mix(in srgb,var(--warn-bg) 60%,var(--surface))} .mini div.b{background:color-mix(in srgb,var(--bad-bg) 60%,var(--surface))}
+.mini span.n{font-size:13px;color:var(--ink-2)}
+.mini b{display:block;font:800 24px "Bricolage Grotesque";margin:2px 0 6px}
+.mini b small{font:400 13px "IBM Plex Sans";color:var(--ink-2)}
+.outlook .foot{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:space-between;font-size:13px;color:var(--ink-2);margin-top:14px}
+.advisory{display:flex;gap:14px;align-items:flex-start;background:var(--warn-bg);border:1px solid color-mix(in srgb,var(--warn) 30%,transparent);border-left:5px solid var(--warn);border-radius:14px;padding:16px 20px;margin-top:-56px;position:relative;z-index:2}
+.advisory svg{flex:none;color:var(--warn);margin-top:2px}
+.advisory b{display:block}
+.advisory p{margin:2px 0 0;font-size:15px}
+section.band{padding:72px 0 0}
+.center{text-align:center;max-width:720px;margin:0 auto 32px}
+.center h2,.page-head h1{font-size:clamp(28px,3.4vw,40px);font-weight:800;letter-spacing:-.02em}
+.center p{color:var(--ink-2);font-size:17px;margin:10px 0 0}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+@media (max-width:900px){.grid3{grid-template-columns:1fr}}
+.feature .fi{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--brand-50);color:var(--brand);margin-bottom:14px}
+.feature p{color:var(--ink-2);font-size:15px;margin:8px 0 12px}
+.feature a{font-weight:600;font-size:15px;text-decoration:none}
+.proof b{display:block;font:800 40px "Bricolage Grotesque";color:var(--brand);line-height:1}
+.proof span{display:block;font-weight:600;margin:10px 0 4px}
+.proof p{margin:0;font-size:14px;color:var(--ink-2)}
+
+/* pages */
+.page{display:none}
+.page.on{display:block}
+.page-head{padding:36px 0 20px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between}
+.page-head p{color:var(--ink-2);margin:6px 0 0;max-width:70ch}
+.page-head .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--ok);margin-right:6px}
+
+/* dashboard */
+.stations{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:12px;margin-bottom:18px}
+.st-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;border-top:4px solid var(--ok);box-shadow:var(--shadow);cursor:pointer;text-align:left;font:inherit;color:inherit}
+.st-card.w{border-top-color:var(--warn)} .st-card.b{border-top-color:var(--bad)}
+.st-card[aria-pressed="true"]{outline:2px solid var(--brand);outline-offset:-1px}
+.st-card .t{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px 6px}
+.st-card .t span{font-weight:600;font-size:15px}
+.st-card .r{font-size:12px;color:var(--ink-2)}
+.st-card b{display:block;font:800 26px "Bricolage Grotesque";margin:8px 0 2px}
+.st-card b small{font:400 12px "IBM Plex Sans";color:var(--ink-2)}
+.st-card .pct{font-size:13px;color:var(--ink-2)}
+.dash2{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:18px}
+.dash3{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;margin-top:18px}
+@media (max-width:980px){.dash2,.dash3{grid-template-columns:1fr}}
+.tabs{display:flex;gap:2px;background:var(--bg);border-radius:10px;padding:3px;flex-wrap:wrap}
+.tabs button{font:600 14px "IBM Plex Sans";border:0;background:transparent;color:var(--ink-2);padding:6px 11px;border-radius:8px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--brand);box-shadow:var(--shadow)}
+.chart-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:flex-start}
+#trend{width:100%;height:auto;display:block;margin-top:8px}
+.ax{font:12px "IBM Plex Sans";fill:var(--ink-2)}
+.gridl{stroke:var(--line)}
+.status-list{list-style:none;margin:0;padding:0}
+.status-list li{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.status-list li:last-child{border-bottom:0}
+.status-list .si{flex:none;display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--brand-50);color:var(--brand)}
+.status-list div{flex:1;min-width:0}
+.status-list b{display:block;font-size:15px}
+.status-list span{font-size:13px;color:var(--ink-2)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:13px;font-weight:600;color:var(--ink-2)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.ours td{font-weight:600}
+.tablewrap{overflow-x:auto}
+.empty-state{display:flex;gap:12px;align-items:center;padding:18px;border-radius:12px;background:var(--ok-bg);color:var(--ok);font-weight:600}
+.risk-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;width:110px;flex:none}
+.bar i{display:block;height:100%;background:var(--warn)}
 
 /* replay */
-.replay{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;margin-top:28px}
-@media (max-width:960px){.replay{grid-template-columns:1fr}}
-.mapbox{align-self:start;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 14px 10px;min-width:0}
-.controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;justify-content:space-between}
+.replay{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:18px}
+@media (max-width:980px){.replay{grid-template-columns:1fr}}
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;justify-content:space-between}
 .years{display:flex;gap:4px;flex-wrap:wrap}
-.years button{font:inherit;font-size:14px;border:1px solid var(--line);background:transparent;color:var(--ink);padding:4px 11px;border-radius:999px;cursor:pointer}
-.years button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.lead{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-2)}
-.lead select,.lead input{font:inherit;font-size:14px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:4px 8px}
-.lead input{color-scheme:light dark}
-.check{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--paper);font-size:15px;line-height:1.5}
-.check b{font-weight:700}
-.tally{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:6px;font-size:14px;color:var(--ink-2)}
-.tally span b{color:var(--ink)}
-.outcome{display:inline-block;font-weight:700;font-size:14px;padding:2px 9px;border-radius:999px;margin:8px 0 2px}
-.o-hit{background:color-mix(in srgb,var(--paddy) 22%,transparent);color:var(--paddy)}
-.o-quiet{background:color-mix(in srgb,var(--paddy) 14%,transparent);color:var(--paddy)}
-.o-miss,.o-false{background:color-mix(in srgb,var(--reported) 16%,transparent);color:var(--reported)}
-.o-na{background:var(--line);color:var(--ink-2)}
+.years button{font:600 14px "IBM Plex Sans";border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:5px 12px;border-radius:999px;cursor:pointer}
+.years button[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand)}
+.ctl{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-2)}
+.ctl select,.ctl input{font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:6px 9px;color-scheme:light dark}
 #map{width:100%;height:auto;display:block;margin-top:6px}
-#map .d{stroke:var(--panel);stroke-width:.8;cursor:pointer;transition:fill .25s}
-@media (prefers-reduced-motion:reduce){#map .d{transition:none}}
+#map .d{stroke:var(--surface);stroke-width:.8;cursor:pointer;transition:fill .25s}
 #map .d:hover,#map .d.sel{stroke:var(--ink);stroke-width:1.6}
-#map .rep{fill:none;stroke:var(--reported);stroke-width:2.2;pointer-events:none;stroke-dasharray:4 2.5}
-#map .river{fill:none;stroke:var(--silt);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;opacity:.9;pointer-events:none}
-#map .st{fill:var(--panel);stroke:var(--silt);stroke-width:2}
-#map .stlab{font:12px "IBM Plex Sans";fill:var(--ink-2);paint-order:stroke;stroke:var(--panel);stroke-width:3px}
+#map .rep{fill:none;stroke:var(--bad);stroke-width:2.2;pointer-events:none;stroke-dasharray:4 2.5}
+#map .river{fill:none;stroke:var(--silt);stroke-width:3.2;stroke-linecap:round;opacity:.9;pointer-events:none}
+#map .st{fill:var(--surface);stroke:var(--silt);stroke-width:2}
+#map .stlab{font:12px "IBM Plex Sans";fill:var(--ink-2);paint-order:stroke;stroke:var(--surface);stroke-width:3px}
 .timeline{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;margin-top:4px}
-.play{font:inherit;font-size:14px;border:0;background:var(--ink);color:var(--paper);border-radius:999px;width:34px;height:34px;cursor:pointer;display:grid;place-items:center}
-input[type=range]{width:100%;accent-color:var(--w3)}
-.date{font-family:"Bricolage Grotesque";font-weight:600;font-size:20px;min-width:9.5ch;text-align:right;font-variant-numeric:tabular-nums}
+.play{border:0;background:var(--brand);color:#fff;border-radius:999px;width:36px;height:36px;cursor:pointer;display:grid;place-items:center;font-size:14px}
+input[type=range]{width:100%;accent-color:var(--brand)}
+.date{font:600 20px "Bricolage Grotesque";min-width:9.5ch;text-align:right}
 .legend{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;font-size:13px;color:var(--ink-2);margin-top:8px}
 .ramp{display:flex;align-items:center;gap:6px}
 .ramp i{display:inline-block;width:22px;height:10px}
-.ramp i:first-child{border-radius:3px 0 0 3px}.ramp i:last-of-type{border-radius:0 3px 3px 0}
-.swatch-rep{display:inline-block;width:22px;height:10px;border:2px dashed var(--reported);border-radius:2px;vertical-align:middle;margin-right:6px}
-
-/* side panel */
-.side{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0}
-.side h2{font-size:26px;font-weight:800;letter-spacing:-.01em}
-.side .sub{color:var(--ink-2);font-size:14px;margin:4px 0 14px}
-.verdict{font-size:15px;padding:10px 12px;border-radius:10px;background:var(--paper);margin-bottom:14px;line-height:1.45}
-.verdict b{font-weight:700}
-.side h3{font-size:15px;font-weight:600;margin:16px 0 6px;color:var(--ink)}
+.swatch-rep{display:inline-block;width:22px;height:10px;border:2px dashed var(--bad);border-radius:2px;vertical-align:middle;margin-right:6px}
+.check{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--bg);font-size:15px}
+.tally{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.side h2{font-size:26px;font-weight:800}
+.side .sub{margin-bottom:14px}
+.verdict{font-size:15px;padding:12px 14px;border-radius:12px;background:var(--bg);margin-bottom:14px;line-height:1.5}
+.side h3{font-size:15px;font-weight:600;margin:16px 0 6px}
 .bars{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;align-items:end;height:112px}
 .bars div{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px;font-size:12px;color:var(--ink-2)}
-.bars span.b{width:100%;border-radius:4px 4px 0 0;background:var(--w2);min-height:2px}
-.bars span.b.on{background:var(--w4)}
+.bars span.b{width:100%;border-radius:5px 5px 0 0;background:var(--r2);min-height:2px}
+.bars span.b.on{background:var(--r4)}
 .note{font-size:13px;color:var(--ink-2);margin:6px 0 0}
 #hydro{width:100%;height:auto;display:block}
-.hy-q{fill:none;stroke:var(--w3);stroke-width:1.6}
-.hy-thr{stroke:var(--reported);stroke-dasharray:5 4;stroke-width:1.2}
+.hy-q{fill:none;stroke:var(--brand);stroke-width:1.6}
+.hy-thr{stroke:var(--bad);stroke-dasharray:5 4;stroke-width:1.2}
 .hy-now{stroke:var(--ink);stroke-width:1}
-.hy-ax{font:11px "IBM Plex Sans";fill:var(--ink-2)}
-.empty{color:var(--ink-2);font-size:15px}
 
-/* sections */
-section.block{padding:72px 0 8px}
-section.block>.wrap>h2{font-size:clamp(28px,3.6vw,42px);font-weight:800;letter-spacing:-.02em;max-width:22ch}
-.intro{max-width:64ch;color:var(--ink-2);margin:12px 0 26px}
-.cols{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:start}
+/* track + satellite */
+.cols{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:start}
 @media (max-width:900px){.cols{grid-template-columns:1fr}}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0}
-.card h3{font-size:18px;font-weight:600;margin-bottom:4px}
-.card .cap{font-size:14px;color:var(--ink-2);margin:0 0 10px}
 #skill{width:100%;height:auto;display:block}
-.sk-ax{font:12px "IBM Plex Sans";fill:var(--ink-2)}
-.sk-grid{stroke:var(--line)}
-.sk-m{fill:none;stroke:var(--w3);stroke-width:3}
-.sk-p{fill:none;stroke:var(--ink-2);stroke-width:2;stroke-dasharray:6 5}
-.sk-lab{font:13px "IBM Plex Sans";font-weight:700}
-table{width:100%;border-collapse:collapse;font-size:15px}
-th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font-weight:700;font-size:13px;color:var(--ink-2)}
-td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-tr.ours td{font-weight:700}
-.tablewrap{overflow-x:auto}
-.honest{border-left:3px solid var(--silt);padding:4px 0 4px 14px;margin:18px 0 0;font-size:15px;color:var(--ink-2);max-width:70ch}
-
-/* scenes */
-.scenes{display:grid;gap:22px}
-.scene{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(170px,.9fr);gap:10px;align-items:start}
+.honest{border-left:4px solid var(--silt);background:var(--surface);border-radius:0 12px 12px 0;padding:14px 18px;margin:18px 0 0;font-size:15px;color:var(--ink-2)}
+.segstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:18px}
+.segstats b{font:800 36px "Bricolage Grotesque";display:block;color:var(--brand);line-height:1.05}
+.segstats span{font-size:14px;color:var(--ink-2)}
+.scene{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(170px,.9fr);gap:12px;align-items:start;margin-bottom:16px}
 @media (max-width:760px){.scene{grid-template-columns:repeat(3,minmax(0,1fr))}.scene .meta{grid-column:1/-1}}
 .scene figure{margin:0}
-.scene img{width:100%;height:auto;display:block;border-radius:8px;background:#000}
+.scene img{width:100%;height:auto;display:block;border-radius:10px;background:#000}
 .scene figcaption{font-size:13px;color:var(--ink-2);margin-top:5px}
 .scene .meta{font-size:14px;color:var(--ink-2)}
-.scene .meta b{display:block;font-family:"Bricolage Grotesque";font-size:28px;color:var(--ink);font-weight:800;line-height:1}
-.segstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:26px}
-.segstats div{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
-.segstats b{font-family:"Bricolage Grotesque";font-size:34px;font-weight:800;display:block;line-height:1.05}
-.segstats span{font-size:14px;color:var(--ink-2)}
-
-/* method */
+.scene .meta b{display:block;font:800 30px "Bricolage Grotesque";color:var(--ink);line-height:1}
 .steps{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;counter-reset:s}
-.steps li{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;counter-increment:s}
-.steps li::before{content:counter(s);display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--paper);font-weight:700;font-size:14px;margin-bottom:8px}
-.steps h3{font-size:17px;font-weight:600;margin-bottom:4px}
-.steps p{margin:0;font-size:15px;color:var(--ink-2)}
-footer{margin-top:80px;padding:28px 0 40px;border-top:1px solid var(--line);font-size:14px;color:var(--ink-2)}
-footer p{max-width:80ch;margin:0 0 8px}
-.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--paper);font-size:13px;padding:6px 9px;border-radius:7px;opacity:0;transition:opacity .12s;z-index:5;max-width:240px}
+.steps li{counter-increment:s}
+.steps li::before{content:counter(s);display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--brand);color:#fff;font-weight:600;font-size:14px;margin-bottom:10px}
+.steps p{margin:6px 0 0;font-size:15px;color:var(--ink-2)}
+.limits{margin:0;padding-left:20px;color:var(--ink-2)}
+.limits li{margin:6px 0}
+footer{margin-top:80px;background:var(--brand-900);color:#cfe3de;padding:36px 0 44px;font-size:14px}
+footer a{color:#fff}
+footer p{max-width:85ch;margin:0 0 8px}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);font-size:13px;padding:6px 9px;border-radius:8px;opacity:0;transition:opacity .12s;z-index:30;max-width:240px}
 </style>
 </head>
 <body>
-<header class="wrap bar">
-  <a class="brand" href="#top" aria-label="FloodWatch Assam home">
-    <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M2 15c3 0 3-3 6-3s3 3 6 3 3-3 6-3 3 3 4 3" fill="none" stroke="var(--silt)" stroke-width="2.6" stroke-linecap="round"/><path d="M2 21c3 0 3-3 6-3s3 3 6 3 3-3 6-3 3 3 4 3" fill="none" stroke="var(--w3)" stroke-width="2.6" stroke-linecap="round"/><circle cx="13" cy="6" r="3.2" fill="var(--ink)"/></svg>
-    FloodWatch Assam
-  </a>
-  <nav aria-label="Sections">
-    <a href="#replay">Replay a monsoon</a><a href="#track">Track record</a><a href="#satellite">Satellite maps</a><a href="#method">How it works</a>
-  </nav>
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="#home" aria-label="FloodWatch Assam home">
+      <i><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M2 14c2.5 0 2.5-2.5 5-2.5s2.5 2.5 5 2.5 2.5-2.5 5-2.5 2.5 2.5 5 2.5"/><path d="M2 19.5c2.5 0 2.5-2.5 5-2.5s2.5 2.5 5 2.5 2.5-2.5 5-2.5 2.5 2.5 5 2.5"/><path d="M12 3v6M9 6l3 3 3-3"/></svg></i>
+      FloodWatch Assam
+    </a>
+    <nav class="links" aria-label="Pages">
+      <a href="#home">Home</a><a href="#live">Live dashboard</a><a href="#check">Check a date</a><a href="#track">Track record</a><a href="#satellite">Satellite</a><a href="#method">Method</a>
+    </nav>
+    <a class="btn code" href="https://github.com/samiyakazi23/floodwatch">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.88.87 2.34.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.66 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 8 0Z"/></svg>
+      View code
+    </a>
+  </div>
 </header>
 
-<main id="top">
-  <div class="wrap hero">
-    <h1>Which Assam districts will flood in the next few days?</h1>
-    <p>FloodWatch reads river flow along the Brahmaputra and its tributaries and forecasts flooding up to a week ahead. Every forecast below was made without seeing the future, then checked against what the river did and what ASDMA reported on the ground.</p>
-  </div>
-
-  <div class="wrap replay" id="replay">
-    <div class="mapbox">
-      <div class="controls">
-        <div class="years" role="group" aria-label="Monsoon year" id="years"></div>
-        <label class="lead">Check a date
-          <input type="date" id="pick" aria-label="Pick any date from 2021 to 2026">
-        </label>
-        <label class="lead">Forecast
-          <select id="lead" aria-label="Forecast lead time">
-            <option value="1">1 day ahead</option><option value="2">2 days ahead</option>
-            <option value="3" selected>3 days ahead</option><option value="5">5 days ahead</option><option value="7">7 days ahead</option>
-          </select>
-        </label>
-      </div>
-      <svg id="map" viewBox="0 0 900 460" role="img" aria-label="Map of Assam districts coloured by forecast flood chance"></svg>
-      <div class="timeline">
-        <button class="play" id="play" aria-label="Play the monsoon">▶</button>
-        <input type="range" id="day" min="0" max="10" value="0" aria-label="Day of the monsoon">
-        <div class="date" id="date" aria-live="polite">—</div>
-      </div>
-      <div class="legend">
-        <span class="ramp" aria-hidden="true">Chance of flooding <i style="background:var(--w0)"></i><i style="background:var(--w1)"></i><i style="background:var(--w2)"></i><i style="background:var(--w3)"></i><i style="background:var(--w4)"></i></span>
-        <span><span class="swatch-rep" aria-hidden="true"></span>ASDMA reported 1,000+ people affected that month</span>
-      </div>
-      <div class="check" id="check" aria-live="polite"></div>
-    </div>
-
-    <aside class="side" id="side" aria-live="polite">
-      <p class="empty">Select a district on the map.</p>
-    </aside>
-  </div>
-
-  <section class="block" id="track">
+<main>
+<!-- ================= HOME ================= -->
+<div class="page" id="p-home">
+  <div class="hero">
     <div class="wrap">
-      <h2>How often the forecasts were right</h2>
-      <p class="intro">The river model learned from 1997–2020 and was then run day by day through the 2021–2026 monsoons. Each year was forecast with only the years before it. The score is the critical success index (CSI), the standard grade for flood warnings: hits divided by hits, misses and false alarms together. 1 is perfect.</p>
-      <div class="cols">
-        <div class="card">
-          <h3>River flooding, by forecast lead time</h3>
-          <p class="cap">12 river stations, 2021–2026. Compared with assuming tomorrow looks like today.</p>
-          <svg id="skill" viewBox="0 0 520 300" role="img" aria-label="Line chart: forecast skill falls from 0.81 at one day to 0.45 at seven days, above the persistence baseline at every lead"></svg>
-          <p class="cap" id="events"></p>
+      <div>
+        <span class="pill"><b aria-hidden="true"></b>Live flood outlook for Assam</span>
+        <h1>Know when the Brahmaputra will rise.</h1>
+        <p class="lede">FloodWatch reads river flow along the Brahmaputra and its tributaries every morning and forecasts flooding up to seven days ahead for all 33 districts. Its forecasts are tested against six real monsoons.</p>
+        <div class="ctas">
+          <a class="btn btn-white" href="#live"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></svg>Today's forecast</a>
+          <a class="btn btn-ghost" href="#check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Check a past date</a>
         </div>
-        <div class="card">
-          <h3>Real flood impacts, by district and month</h3>
-          <p class="cap">Did a warning go out in months when ASDMA reported 1,000+ people affected? May–Oct, 33 districts.</p>
-          <div class="tablewrap"><table id="impacttable"></table></div>
+        <div class="stats">
+          <div><b>12</b><span>river stations read daily</span></div>
+          <div><b>1–7 days</b><span>forecast lead time</span></div>
+          <div><b>6 monsoons</b><span>tested, 2021–2026</span></div>
         </div>
       </div>
-      <p class="honest" id="honest"></p>
+      <div class="outlook" id="outlook" aria-live="polite"></div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="advisory" id="advisory" role="note"></div>
+  </div>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="center"><h2>Three ways FloodWatch watches the floods</h2><p>River forecasts, impact forecasts and satellite maps, each tested on data it never trained on.</p></div>
+      <div class="grid3">
+        <div class="card feature"><div class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 17l5-5 4 4 8-8"/><path d="M14 8h6v6"/></svg></div>
+          <h3>Forecast the rivers</h3><p>Water passing Dibrugarh reaches Guwahati days later. A model trained on 24 years of flow at 12 stations learns how surges travel and warns 1–7 days ahead.</p><a href="#live">See today's rivers</a></div>
+        <div class="card feature"><div class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M17 4.5a3.5 3.5 0 0 1 0 7M21.5 20c-.5-2.4-1.8-4.1-3.6-4.9"/></svg></div>
+          <h3>Predict who gets affected</h3><p>Half of Assam's flood damage happens when the main river looks fine. A second model learns from ASDMA's district reports where people are actually hit.</p><a href="#track">See the track record</a></div>
+        <div class="card feature"><div class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 14l6-6 4 4 6-6"/><rect x="2" y="16" width="20" height="5" rx="1.5"/><path d="M14 3l2 2M18 7l2 2"/></svg></div>
+          <h3>Map the water from space</h3><p>Radar satellites see through monsoon cloud. A U-Net outlines floodwater on Sentinel-1 images, matching experts' maps for 72% of the water in Assam scenes.</p><a href="#satellite">See satellite maps</a></div>
+      </div>
     </div>
   </section>
 
-  <section class="block" id="satellite">
+  <section class="band">
     <div class="wrap">
-      <h2>Mapping floodwater through monsoon cloud</h2>
-      <p class="intro">Clouds hide floods from ordinary satellites. Radar does not: calm floodwater reflects the signal away and shows up dark. A U-Net trained on 252 hand-labelled Sentinel-1 scenes outlines the water. These four are from Assam and were never used in training.</p>
-      <div class="segstats" id="segstats"></div>
-      <div class="scenes" id="scenes"></div>
+      <div class="center"><h2>Tested on six real monsoons</h2><p>Every year from 2021 to 2026 was forecast using only the years before it.</p></div>
+      <div class="grid3" id="proof"></div>
     </div>
   </section>
+</div>
 
-  <section class="block" id="method">
-    <div class="wrap">
-      <h2>How it works</h2>
-      <p class="intro">Four steps, each tested on data it never trained on.</p>
-      <ol class="steps">
-        <li><h3>Read the rivers</h3><p>Daily flow at six Brahmaputra stations from Dibrugarh to Dhubri, plus the Subansiri, Jia Bharali, Dhansiri, Kopili, Beki and Barak (GloFAS, 1997–2026).</p></li>
-        <li><h3>Learn how surges travel</h3><p>Water passing Dibrugarh reaches Guwahati days later. A gradient-boosted model uses every station's recent rise to forecast flooding 1–7 days ahead.</p></li>
-        <li><h3>Predict impact, not just water level</h3><p>A second model turns river forecasts and each district's flood history into the chance that people will be affected, trained on ASDMA's district reports.</p></li>
-        <li><h3>See the water from space</h3><p>A U-Net maps flooded land from Sentinel-1 radar, so forecasts can be checked against where water actually spread.</p></li>
-      </ol>
+<!-- ================= LIVE ================= -->
+<div class="page" id="p-live">
+  <div class="wrap">
+    <div class="page-head">
+      <div><h1>Live dashboard</h1><p id="live-sub"></p></div>
+      <a class="btn btn-white" style="border-color:var(--line)" href="#check">Check a past date</a>
     </div>
-  </section>
+    <div class="stations" id="stations"></div>
+    <div class="dash2">
+      <div class="card">
+        <div class="chart-head">
+          <div><h3>River flow, last 45 days</h3><p class="sub" id="trend-sub"></p></div>
+          <div class="tabs" role="tablist" id="trend-tabs"></div>
+        </div>
+        <svg id="trend" viewBox="0 0 640 300" role="img" aria-label="River flow over the last 45 days against the warning level"></svg>
+      </div>
+      <div class="card">
+        <h3>System status</h3><p class="sub">Data, models and the daily run</p>
+        <ul class="status-list" id="status"></ul>
+      </div>
+    </div>
+    <div class="dash3">
+      <div class="card"><h3>Districts at risk</h3><p class="sub" id="risk-sub"></p><div id="risk"></div></div>
+      <div class="card"><h3>Forecast log</h3><p class="sub">Every forecast is saved before the event, to be scored after the 2027 monsoon.</p><div class="tablewrap"><table id="log"></table></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= CHECK A DATE ================= -->
+<div class="page" id="p-check">
+  <div class="wrap">
+    <div class="page-head"><div><h1>Check any date, 2021–2026</h1><p>Pick a day or play a whole monsoon. Each district shows the chance of flooding the model gave that morning, and what actually happened next.</p></div></div>
+    <div class="replay">
+      <div class="card">
+        <div class="controls">
+          <div class="years" role="group" aria-label="Year" id="years"></div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px 16px">
+            <label class="ctl">Date <input type="date" id="pick"></label>
+            <label class="ctl">Forecast <select id="lead"><option value="1">1 day ahead</option><option value="2">2 days ahead</option><option value="3" selected>3 days ahead</option><option value="5">5 days ahead</option><option value="7">7 days ahead</option></select></label>
+          </div>
+        </div>
+        <svg id="map" viewBox="0 0 900 460" role="img" aria-label="Map of Assam districts coloured by forecast flood chance"></svg>
+        <div class="timeline">
+          <button class="play" id="play" aria-label="Play the year">▶</button>
+          <input type="range" id="day" min="0" max="10" value="0" aria-label="Day of the year">
+          <div class="date" id="date" aria-live="polite">—</div>
+        </div>
+        <div class="legend">
+          <span class="ramp" aria-hidden="true">Chance of flooding <i style="background:var(--r0)"></i><i style="background:var(--r1)"></i><i style="background:var(--r2)"></i><i style="background:var(--r3)"></i><i style="background:var(--r4)"></i></span>
+          <span><span class="swatch-rep" aria-hidden="true"></span>ASDMA reported 1,000+ people affected that month</span>
+        </div>
+        <div class="check" id="checkbox" aria-live="polite"></div>
+      </div>
+      <aside class="card side" id="side" aria-live="polite"></aside>
+    </div>
+  </div>
+</div>
+
+<!-- ================= TRACK RECORD ================= -->
+<div class="page" id="p-track">
+  <div class="wrap">
+    <div class="page-head"><div><h1>Track record</h1><p>The river model learned from 1997–2020, then ran day by day through 2021–2026. The score is the critical success index (CSI): hits ÷ (hits + misses + false alarms). 1 is perfect.</p></div></div>
+    <div class="cols">
+      <div class="card"><h3>River flooding, by forecast lead time</h3><p class="sub">12 river stations, 2021–2026, against assuming tomorrow looks like today.</p>
+        <svg id="skill" viewBox="0 0 520 300" role="img" aria-label="Forecast skill by lead time"></svg><p class="note" id="events"></p></div>
+      <div class="card"><h3>Real flood impacts, by district and month</h3><p class="sub">Warnings against months when ASDMA reported 1,000+ people affected. May–Oct, 33 districts.</p>
+        <div class="tablewrap"><table id="impacttable"></table></div></div>
+    </div>
+    <p class="honest" id="honest"></p>
+  </div>
+</div>
+
+<!-- ================= SATELLITE ================= -->
+<div class="page" id="p-satellite">
+  <div class="wrap">
+    <div class="page-head"><div><h1>Mapping floodwater through cloud</h1><p>Calm floodwater reflects radar away from the satellite and shows up dark. A U-Net trained on 252 hand-labelled Sentinel-1 scenes outlines the water. These four Assam scenes were never used in training.</p></div></div>
+    <div class="segstats" id="segstats"></div>
+    <div class="card" id="scenes"></div>
+  </div>
+</div>
+
+<!-- ================= METHOD ================= -->
+<div class="page" id="p-method">
+  <div class="wrap">
+    <div class="page-head"><div><h1>How it works</h1><p>Four steps, each tested on data it never trained on. Full code and results are on GitHub.</p></div></div>
+    <ol class="steps">
+      <li class="card"><h3>Read the rivers</h3><p>Daily flow at six Brahmaputra stations from Dibrugarh to Dhubri, plus the Subansiri, Jia Bharali, Dhansiri, Kopili, Beki and Barak (GloFAS, 1997–2026).</p></li>
+      <li class="card"><h3>Learn how surges travel</h3><p>A gradient-boosted model per lead time uses each station's recent rise and every upstream station's, and predicts whether flow reaches the warning level within 1–7 days.</p></li>
+      <li class="card"><h3>Predict impact, not just water</h3><p>River forecasts plus each district's flood history from other years give the chance that ASDMA reports 1,000+ people affected that month.</p></li>
+      <li class="card"><h3>See the water from space</h3><p>A U-Net maps floodwater on Sentinel-1 radar, so forecasts can be checked against where water actually spread.</p></li>
+    </ol>
+    <div class="cols" style="margin-top:18px">
+      <div class="card"><h3>Built to avoid fooling itself</h3>
+        <ul class="limits"><li>Flood levels and alert cut-offs come from training years only.</li><li>A day's inputs are identical whether or not later days exist; automated tests check this on every change.</li><li>Each test year is forecast with a model that has never seen it.</li><li>Live forecasts are logged before events and scored afterwards.</li></ul></div>
+      <div class="card"><h3>Limitations</h3>
+        <ul class="limits"><li>River flow is from the GloFAS reanalysis, a model, not gauge readings.</li><li>ASDMA's district records start in 2021 and are monthly.</li><li>No rainfall yet. It is the next addition and should help most with local floods.</li><li>A research project, not an official warning service.</li></ul></div>
+    </div>
+  </div>
+</div>
 </main>
 
-<footer class="wrap">
-  <p><b>Data:</b> river discharge from GloFAS v4 via Open-Meteo · flood reports from ASDMA's daily FRIMS bulletins, compiled by CivicDataLab's IDS-DRR project · radar scenes and labels from Sen1Floods11 (Bonafilia et al., 2020) · district boundaries from the 2011 Census shapefiles.</p>
-  <p>A student research project by Samiya Kazi. Not an official warning service: for alerts, follow ASDMA and the Central Water Commission.</p>
+<footer>
+  <div class="wrap">
+    <p><b>Data:</b> river discharge from GloFAS v4 via Open-Meteo · flood reports from ASDMA's daily FRIMS bulletins, compiled by CivicDataLab's IDS-DRR project · radar scenes and labels from Sen1Floods11 (Bonafilia et al., 2020) · district boundaries from Census 2011 shapefiles.</p>
+    <p>A research project by Samiya Kazi · <a href="https://github.com/samiyakazi23/floodwatch">code on GitHub</a>. For official flood warnings, follow ASDMA and the Central Water Commission.</p>
+  </div>
 </footer>
 <div class="tip" id="tip" role="tooltip"></div>
 
@@ -258,204 +398,244 @@ footer p{max-width:80ch;margin:0 0 8px}
 (async function(){
 const $=s=>document.querySelector(s);
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-const fmt=n=>n.toLocaleString("en-IN");
+const fmt=n=>Math.round(n).toLocaleString("en-IN");
 const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const prettyDate=s=>{const [y,m,d]=s.split("-");return `${+d} ${MONTHS[+m-1]} ${y}`};
+const pct=x=>Math.round(x*100)+"%";
 
 const [geo,stations,daily,impacts,summary,scenes]=await Promise.all(
   ["districts","stations","daily","impacts","summary","scenes"].map(n=>fetch(`data/${n}.json`).then(r=>r.json())));
 const live=await fetch("data/live.json").then(r=>r.ok?r.json():null).catch(()=>null);
-
-// d3 draws a ring the "wrong way round" as the whole globe minus the shape: reverse any such rings
+const logLines=await fetch("data/live_log.jsonl").then(r=>r.ok?r.text():"").catch(()=>"");
+const log=logLines.trim()?logLines.trim().split("\n").map(l=>JSON.parse(l)):[];
 geo.features.forEach(f=>{if(d3.geoArea(f)>2*Math.PI){const g=f.geometry;
   if(g.type==="Polygon")g.coordinates.forEach(r=>r.reverse());else g.coordinates.forEach(p=>p.forEach(r=>r.reverse()));}});
+const MAIN=["Dibrugarh","Neamatighat","Tezpur","Guwahati","Goalpara","Dhubri"];
+const ALL=Object.keys(stations);
 
-/* ---------- state ---------- */
-const YEARS=[2021,2022,2023,2024,2025,2026].concat(live?["Today"]:[]);
-let year=2022, lead=3, sel="Morigaon", dayIdx=0, timer=null;
-const anyStation=Object.keys(daily)[0];
+/* ---------- router ---------- */
+const PAGES=["home","live","check","track","satellite","method"];
+function route(){const id=(location.hash.slice(1)||"home");const pg=PAGES.includes(id)?id:"home";
+  PAGES.forEach(p=>$("#p-"+p).classList.toggle("on",p===pg));
+  document.querySelectorAll(".links a").forEach(a=>a.toggleAttribute("aria-current",a.getAttribute("href")==="#"+pg)||a.setAttribute("aria-current","page"));
+  document.querySelectorAll(".links a").forEach(a=>{if(a.getAttribute("href")==="#"+pg)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+  window.scrollTo(0,0); if(pg==="check")update(); if(pg==="live")drawTrend();}
+addEventListener("hashchange",route);
+
+/* ---------- shared status logic ---------- */
+function stationState(s){ // s: live station record
+  const ratio=s.q/s.thr, warn=s.p["3"]>=s.cut["3"];
+  if(ratio>=1)return {k:"b",chip:"c-bad",t:"Above warning level"};
+  if(warn)return {k:"w",chip:"c-warn",t:"Flood warning"};
+  if(ratio>=.7)return {k:"w",chip:"c-warn",t:"Rising, watch"};
+  return {k:"",chip:"c-ok",t:"Normal"};
+}
+const ICON={ok:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
+  warn:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4M12 17h.01"/></svg>'};
+
+/* ---------- HOME ---------- */
+(function(){
+  if(!live){$("#outlook").innerHTML=`<p>Today's forecast is not available yet.</p>`;return}
+  const st=live.stations, warned=ALL.filter(s=>st[s].p["3"]>=st[s].cut["3"]), above=ALL.filter(s=>st[s].q>=st[s].thr);
+  const level=above.length?"bad":warned.length?"warn":"ok";
+  const head=level==="ok"?"No flood expected in the next 3 days":`${warned.length||above.length} of 12 river stations under flood warning`;
+  const body=level==="ok"?"All 12 river stations are below their warning levels, and none is forecast to reach them in the next three days.":`Warnings at ${(warned.length?warned:above).join(", ")}. Follow ASDMA's advisories.`;
+  const mini=["Dibrugarh","Guwahati","Dhubri","Silchar"].map(n=>{const s=st[n],x=stationState(s);
+    return `<div class="${x.k}"><span class="n">${n} · ${s.river}</span><b>${fmt(s.q)} <small>m³/s</small></b><span class="chip ${x.chip}">${x.t}</span> <span class="n">${pct(s.q/s.thr)} of warning</span></div>`}).join("");
+  const o=$("#outlook");o.classList.add(level==="ok"?"ok":level);
+  o.innerHTML=`<div class="head"><div class="ico">${level==="ok"?ICON.ok:ICON.warn}</div><div><small>Today's flood outlook</small><h2>${head}</h2><p>${body}</p></div></div>
+    <div class="mini">${mini}</div>
+    <div class="foot"><span>Forecast issued ${prettyDate(live.issued)} · updates daily at 7:10 AM IST</span><a href="#live">Full dashboard</a></div>`;
+  const m=+live.issued.slice(5,7), dry=m<5||m>10;
+  $("#advisory").innerHTML=`${ICON.warn}<div><b>${dry?"Dry season: Assam's rivers are low":"Monsoon season: check daily"}</b><p>${dry?"Flood season usually begins in May. The live forecast keeps running every morning so it is ready, and so every forecast is on record before the 2027 monsoon.":"Rivers can rise within days during the monsoon."} FloodWatch is a research project: for official warnings, follow ASDMA and the Central Water Commission.</p></div>`;
+  const F=summary.forecast, Y=summary.impact_loyo, G=summary.segmentation;
+  $("#proof").innerHTML=`
+    <div class="card proof"><b>${pct(F[1].hit_rate)}</b><span>of river flood days caught a day ahead</span><p>With ${pct(F[1].false_alarm_ratio)} false alarms. Three days ahead: ${pct(F[3].hit_rate)} caught.</p></div>
+    <div class="card proof"><b>${Y.impact_model.csi.toFixed(2)}</b><span>score against ASDMA's district reports</span><p>Versus ${Y.climatology_jun_jul.csi.toFixed(2)} for flagging every June and July and ${Y.river_forecast_only.csi.toFixed(2)} for river forecasts alone.</p></div>
+    <div class="card proof"><b>${G.unet.water_iou.toFixed(2)}</b><span>water overlap with experts' satellite maps</span><p>Versus ${G.otsu_baseline.water_iou.toFixed(2)} for the brightness threshold agencies use. ${Math.round(G.unet.accuracy*100)}% of pixels correct.</p></div>`;
+})();
+
+/* ---------- LIVE DASHBOARD ---------- */
+let trendStation="Guwahati";
+(function(){
+  if(!live)return;
+  $("#live-sub").innerHTML=`<span class="dot" aria-hidden="true"></span>Forecast issued ${prettyDate(live.issued)} from that morning's river data · updates daily at 7:10 AM IST`;
+  const st=live.stations;
+  $("#stations").innerHTML=ALL.map(n=>{const s=st[n],x=stationState(s);
+    return `<button class="st-card ${x.k}" data-st="${n}" aria-pressed="${n===trendStation}"><div class="t"><span>${n}</span><span class="chip ${x.chip}">${x.t}</span></div>
+      <div class="r">${s.river}</div><b>${fmt(s.q)} <small>m³/s</small></b><div class="pct">${pct(s.q/s.thr)} of warning · ${pct(s.p["3"])} chance in 3 days</div></button>`}).join("");
+  document.querySelectorAll(".st-card").forEach(b=>b.addEventListener("click",()=>{trendStation=b.dataset.st;syncTrend()}));
+  $("#trend-tabs").innerHTML=MAIN.concat(["Silchar"]).map(n=>`<button role="tab" data-st="${n}">${n}</button>`).join("");
+  document.querySelectorAll("#trend-tabs button").forEach(b=>b.addEventListener("click",()=>{trendStation=b.dataset.st;syncTrend()}));
+  const issued=new Date(live.issued+"T00:00:00");
+  $("#status").innerHTML=[
+    ["River data feed",`GloFAS via Open-Meteo · latest day ${prettyDate(live.issued)}`,"Online","c-ok",'<path d="M4 14c2.5 0 2.5-2.5 5-2.5s2.5 2.5 5 2.5 2.5-2.5 5-2.5"/><path d="M4 19c2.5 0 2.5-2.5 5-2.5s2.5 2.5 5 2.5 2.5-2.5 5-2.5"/>'],
+    ["Forecast models",`5 lead times · trained on river data to ${prettyDate(live.trained_through)}`,"Ready","c-ok",'<path d="M3 17l5-5 4 4 8-8"/>'],
+    ["Daily run","GitHub Actions · every day at 7:10 AM IST","Scheduled","c-ok",'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>'],
+    ["Impact model","Needs ASDMA's monthly reports · monsoon only",(+live.issued.slice(5,7)<5||+live.issued.slice(5,7)>10)?"Off season":"Active",(+live.issued.slice(5,7)<5||+live.issued.slice(5,7)>10)?"c-na":"c-ok",'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/>'],
+    ["Satellite model",`U-Net · ${summary.segmentation.unet.water_iou.toFixed(2)} water overlap on test scenes`,"Ready","c-ok",'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 15l5-5 4 4 3-3 6 6"/>'],
+  ].map(([t,s,c,k,ic])=>`<li><span class="si"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">${ic}</svg></span><div><b>${t}</b><span>${s}</span></div><span class="chip ${k}">${c}</span></li>`).join("");
+  // districts at risk
+  const dist=geo.features.map(f=>({n:f.properties.name,st:f.properties.station,p:st[f.properties.station].p["3"],c:st[f.properties.station].cut["3"]})).sort((a,b)=>b.p-a.p);
+  const atRisk=dist.filter(d=>d.p>=d.c);
+  $("#risk-sub").textContent=`3-day forecast for all 33 districts, by their river station`;
+  $("#risk").innerHTML=atRisk.length?atRisk.map(d=>`<div class="risk-row"><div><b>${d.n}</b><div class="note">${d.st} gauge</div></div><div style="display:flex;align-items:center;gap:10px"><span class="bar"><i style="width:${pct(d.p)}"></i></span><b>${pct(d.p)}</b></div></div>`).join("")
+    :`<div class="empty-state">${ICON.ok}No district is above its alert level for the next 3 days.</div>
+      <p class="note">Highest today: ${dist[0].n} at ${pct(dist[0].p)} (alert at ${pct(dist[0].c)}).</p>`;
+  // log
+  const rows=log.slice(-8).reverse();
+  $("#log").innerHTML=`<thead><tr><th>Issued</th><th>Stations warned (3-day)</th><th class="n">Highest chance</th></tr></thead><tbody>`+
+    (rows.length?rows.map(r=>{const w=Object.entries(r.stations).filter(([n,v])=>v.p["3"]>=live.stations[n].cut["3"]).map(([n])=>n);
+      const mx=Math.max(...Object.values(r.stations).map(v=>v.p["3"]));
+      return `<tr><td>${prettyDate(r.issued)}</td><td>${w.length?w.join(", "):'<span class="muted">None</span>'}</td><td class="n">${pct(mx)}</td></tr>`}).join("")
+    :`<tr><td colspan="3" class="muted">The first forecast is logged tomorrow morning.</td></tr>`)+"</tbody>";
+})();
+function syncTrend(){document.querySelectorAll(".st-card").forEach(b=>b.setAttribute("aria-pressed",b.dataset.st===trendStation));
+  document.querySelectorAll("#trend-tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.st===trendStation));drawTrend()}
+function drawTrend(){
+  if(!live)return; const s=live.stations[trendStation]; const h=s.history; const svg=d3.select("#trend"); svg.selectAll("*").remove();
+  document.querySelectorAll("#trend-tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.st===trendStation));
+  $("#trend-sub").textContent=`${trendStation} on the ${s.river} · warning level ${fmt(s.thr)} m³/s`;
+  const W=640,H=300,m={l:58,r:16,t:16,b:30};
+  const dates=h.date.map(d=>new Date(d+"T00:00:00"));
+  const x=d3.scaleTime().domain(d3.extent(dates)).range([m.l,W-m.r]);
+  const y=d3.scaleLinear().domain([0,Math.max(d3.max(h.q),s.thr)*1.1]).nice().range([H-m.b,m.t]);
+  y.ticks(5).forEach(v=>{svg.append("line").attr("class","gridl").attr("x1",m.l).attr("x2",W-m.r).attr("y1",y(v)).attr("y2",y(v));
+    svg.append("text").attr("class","ax").attr("x",m.l-8).attr("y",y(v)+4).attr("text-anchor","end").text(v>=1000?(v/1000)+"k":v)});
+  x.ticks(6).forEach(d=>svg.append("text").attr("class","ax").attr("x",x(d)).attr("y",H-8).attr("text-anchor","middle").text(`${d.getDate()} ${MONTHS[d.getMonth()]}`));
+  svg.append("text").attr("class","ax").attr("x",m.l-8).attr("y",H-m.b+18).attr("text-anchor","end").text("m³/s");
+  svg.append("path").attr("d",d3.area().x((d,i)=>x(dates[i])).y0(H-m.b).y1(d=>y(d))(h.q)).attr("fill",css("--brand-50"));
+  svg.append("path").attr("d",d3.line().x((d,i)=>x(dates[i])).y(d=>y(d))(h.q)).attr("fill","none").attr("stroke",css("--brand")).attr("stroke-width",2.4);
+  svg.append("line").attr("x1",m.l).attr("x2",W-m.r).attr("y1",y(s.thr)).attr("y2",y(s.thr)).attr("stroke",css("--bad")).attr("stroke-dasharray","6 5").attr("stroke-width",1.5);
+  svg.append("text").attr("class","ax").attr("x",W-m.r).attr("y",y(s.thr)-6).attr("text-anchor","end").attr("fill",css("--bad")).text("Warning level");
+  const lx=x(dates[dates.length-1]),ly=y(h.q[h.q.length-1]);
+  svg.append("circle").attr("cx",lx).attr("cy",ly).attr("r",4.5).attr("fill",css("--brand"));
+}
+
+/* ---------- CHECK A DATE ---------- */
+const YEARS=[2021,2022,2023,2024,2025,2026];
+let year=2022, lead=3, sel="Kamrup", dayIdx=0, timer=null;
+const anyStation=ALL[0];
 const datesFor=y=>daily[anyStation].date.map((d,i)=>[d,i]).filter(([d])=>d.startsWith(y));
 let dates=datesFor(year);
 const impactKey={};impacts.forEach(r=>impactKey[`${r.d}|${r.y}|${r.m}`]=r);
-
-/* ---------- map ---------- */
 const svg=d3.select("#map"), W=900, H=460;
 const proj=d3.geoMercator().fitExtent([[10,10],[W-10,H-10]],geo);
 const path=d3.geoPath(proj);
-const color=t=>{const c=[css("--w0"),css("--w1"),css("--w2"),css("--w3"),css("--w4")];return d3.scaleThreshold().domain([.2,.4,.6,.8]).range(c)(t)};
+const color=t=>d3.scaleThreshold().domain([.2,.4,.6,.8]).range(["--r0","--r1","--r2","--r3","--r4"].map(css))(t);
 const dSel=svg.append("g").selectAll("path").data(geo.features).join("path")
-  .attr("class","d").attr("d",path).attr("tabindex",0).attr("role","button")
-  .attr("aria-label",f=>f.properties.name)
+  .attr("class","d").attr("d",path).attr("tabindex",0).attr("role","button").attr("aria-label",f=>f.properties.name)
   .on("click",(e,f)=>{sel=f.properties.name;update()})
   .on("keydown",(e,f)=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();sel=f.properties.name;update()}})
-  .on("mousemove",(e,f)=>tip(e,`<b>${f.properties.name}</b><br>${Math.round(riskOf(f.properties.station)*100)}% chance · ${f.properties.station} gauge`))
+  .on("mousemove",(e,f)=>tip(e,`<b>${f.properties.name}</b><br>${pct(probOf(f.properties.station))} chance · ${f.properties.station} gauge`))
   .on("mouseleave",()=>tip());
 const repSel=svg.append("g").selectAll("path").data(geo.features).join("path").attr("class","rep").attr("d",path);
-// Brahmaputra main stem through its six gauging stations (schematic)
-const stem=["Dibrugarh","Neamatighat","Tezpur","Guwahati","Goalpara","Dhubri"].map(s=>proj([stations[s].lon,stations[s].lat]));
-svg.append("path").attr("class","river").attr("d",d3.line().curve(d3.curveCatmullRom.alpha(.5))(stem));
-const stG=svg.append("g").selectAll("g").data(Object.entries(stations)).join("g")
-  .attr("transform",([,s])=>`translate(${proj([s.lon,s.lat])})`);
+svg.append("path").attr("class","river").attr("d",d3.line().curve(d3.curveCatmullRom.alpha(.5))(MAIN.map(s=>proj([stations[s].lon,stations[s].lat]))));
+const stG=svg.append("g").selectAll("g").data(Object.entries(stations)).join("g").attr("transform",([,s])=>`translate(${proj([s.lon,s.lat])})`);
 stG.append("circle").attr("class","st").attr("r",4);
-stG.filter(([n])=>["Dibrugarh","Tezpur","Guwahati","Dhubri","Silchar"].includes(n))
-  .append("text").attr("class","stlab").attr("x",7).attr("y",-6).text(([n])=>n);
-
-function tip(e,html){const t=$("#tip");if(!e){t.style.opacity=0;return}t.innerHTML=html;t.style.opacity=1;
-  t.style.left=Math.min(e.clientX+14,innerWidth-250)+"px";t.style.top=(e.clientY+14)+"px"}
-
-/* ---------- data helpers ---------- */
-function scale(p,c){return p>=c? .6+.4*Math.min(1,(p-c)/Math.max(1e-6,1-c)) : .6*p/Math.max(c,1e-6)}
-function riskOf(st){if(year==="Today"){const r=live.stations[st];return scale(r.p[lead],r.cut[lead])}
-  const s=daily[st];const i=dates[dayIdx][1];const p=s["p"+lead][i],c=s["c"+lead][i];
-  // probability scaled so the tuned alert cut-off sits at 0.6 on the colour ramp
-  return p>=c? .6+.4*Math.min(1,(p-c)/Math.max(1e-6,1-c)) : .6*p/Math.max(c,1e-6)}
-function warned(st){if(year==="Today"){const r=live.stations[st];return r.p[lead]>=r.cut[lead]}
-  const s=daily[st];const i=dates[dayIdx][1];return s["p"+lead][i]>=s["c"+lead][i]}
-const monthNow=()=>year==="Today"?0:+dates[dayIdx][0].slice(5,7);
-// what actually happened: did the river reach its warning level in the next `lead` days?
-function observed(st){const s=daily[st];const i=dates[dayIdx][1];
-  if(i+lead>=s.q.length)return null;
-  for(let k=1;k<=lead;k++){if(s.q[i+k]>s.thr[i+k])return true}return false}
+stG.filter(([n])=>["Dibrugarh","Tezpur","Guwahati","Dhubri","Silchar"].includes(n)).append("text").attr("class","stlab").attr("x",7).attr("y",-6).text(([n])=>n);
+function tip(e,html){const t=$("#tip");if(!e){t.style.opacity=0;return}t.innerHTML=html;t.style.opacity=1;t.style.left=Math.min(e.clientX+14,innerWidth-250)+"px";t.style.top=(e.clientY+14)+"px"}
+const I=()=>dates[dayIdx][1];
+const probOf=st=>daily[st]["p"+lead][I()];
+const warned=st=>daily[st]["p"+lead][I()]>=daily[st]["c"+lead][I()];
+const riskOf=st=>{const p=probOf(st),c=daily[st]["c"+lead][I()];return p>=c?.6+.4*Math.min(1,(p-c)/Math.max(1e-6,1-c)):.6*p/Math.max(c,1e-6)};
+const monthNow=()=>+dates[dayIdx][0].slice(5,7);
+function observed(st){const s=daily[st],i=I();if(i+lead>=s.q.length)return null;for(let k=1;k<=lead;k++)if(s.q[i+k]>s.thr[i+k])return true;return false}
 function outcome(st){const o=observed(st),w=warned(st);
-  if(o===null)return {k:"na",t:"Too recent to check"};
-  if(w&&o)return {k:"hit",t:"Correct warning"};
-  if(w&&!o)return {k:"false",t:"False alarm"};
-  if(!w&&o)return {k:"miss",t:"Missed flood"};
-  return {k:"quiet",t:"Correctly no warning"}}
-
-/* ---------- controls ---------- */
+  if(o===null)return {k:"c-na",t:"Too recent to check"};
+  if(w&&o)return {k:"c-ok",t:"Correct warning"}; if(w&&!o)return {k:"c-bad",t:"False alarm"};
+  if(!w&&o)return {k:"c-bad",t:"Missed flood"}; return {k:"c-ok",t:"Correctly no warning"}}
 const yb=d3.select("#years").selectAll("button").data(YEARS).join("button").text(d=>d)
-  .on("click",(e,y)=>{year=y;if(y!=="Today"){dates=datesFor(y);dayIdx=Math.min(dayIdx,dates.length-1)}setRange();update()});
-function setRange(){const r=$("#day");yb.attr("aria-pressed",d=>d===year);
-  document.querySelector(".timeline").style.visibility=year==="Today"?"hidden":"visible";
-  if(year!=="Today"){r.max=dates.length-1;r.value=dayIdx}}
+  .on("click",(e,y)=>{year=y;dates=datesFor(y);dayIdx=Math.min(dayIdx,dates.length-1);setRange();update()});
+function setRange(){const r=$("#day");r.max=dates.length-1;r.value=dayIdx;yb.attr("aria-pressed",d=>d===year)}
 $("#day").addEventListener("input",e=>{dayIdx=+e.target.value;update()});
-const allDates=daily[anyStation].date;
-$("#pick").min=allDates[0];$("#pick").max=allDates[allDates.length-1];
-$("#pick").addEventListener("change",e=>{const v=e.target.value;if(!v)return;
-  const y=+v.slice(0,4);if(!YEARS.includes(y)){return}
-  year=y;dates=datesFor(y);const j=dates.findIndex(([d])=>d===v);if(j<0)return;dayIdx=j;setRange();update()});
 $("#lead").addEventListener("change",e=>{lead=+e.target.value;update()});
-$("#play").addEventListener("click",()=>{if(year==="Today")return;
-  if(timer){clearInterval(timer);timer=null;$("#play").textContent="▶";$("#play").setAttribute("aria-label","Play the monsoon");return}
+const allDates=daily[anyStation].date;$("#pick").min=allDates[0];$("#pick").max=allDates[allDates.length-1];
+$("#pick").addEventListener("change",e=>{const v=e.target.value;if(!v)return;const y=+v.slice(0,4);if(!YEARS.includes(y))return;
+  year=y;dates=datesFor(y);const j=dates.findIndex(([d])=>d===v);if(j<0)return;dayIdx=j;setRange();update()});
+$("#play").addEventListener("click",()=>{
+  if(timer){clearInterval(timer);timer=null;$("#play").textContent="▶";$("#play").setAttribute("aria-label","Play the year");return}
   $("#play").textContent="❚❚";$("#play").setAttribute("aria-label","Pause");
-  timer=setInterval(()=>{dayIdx=(dayIdx+1)%dates.length;$("#day").value=dayIdx;update()},matchMedia("(prefers-reduced-motion: reduce)").matches?600:160)});
-// start on the 2022 flood peak, on a district that was both warned and reported affected
+  timer=setInterval(()=>{dayIdx=(dayIdx+1)%dates.length;$("#day").value=dayIdx;update()},matchMedia("(prefers-reduced-motion: reduce)").matches?600:120)});
 dayIdx=Math.max(0,dates.findIndex(([d])=>d==="2022-06-16"));
 {const m=monthNow();const hit=geo.features.filter(f=>warned(f.properties.station)&&(impactKey[`${f.properties.name}|${year}|${m}`]||{}).pop>=1000)
-  .sort((a,b)=>impactKey[`${b.properties.name}|${year}|${m}`].pop-impactKey[`${a.properties.name}|${year}|${m}`].pop);
- if(hit.length)sel=hit[0].properties.name;}
+  .sort((a,b)=>impactKey[`${b.properties.name}|${year}|${m}`].pop-impactKey[`${a.properties.name}|${year}|${m}`].pop);if(hit.length)sel=hit[0].properties.name;}
 
-/* ---------- side panel ---------- */
-function sideLive(){
-  const f=geo.features.find(f=>f.properties.name===sel), st=f.properties.station, r=live.stations[st];
-  const bars=[1,2,3,5,7].map(h=>`<div><span>${Math.round(r.p[h]*100)}%</span><span class="b ${r.p[h]>=r.cut[h]?"on":""}" style="height:${Math.max(2,r.p[h]*64)}px"></span>${h}d</div>`).join("");
-  $("#side").innerHTML=`<h2>${sel}</h2><p class="sub">Watched by the ${st} gauge on the ${stations[st].river}</p>
-    <div class="verdict">${warned(st)?`<b>Flood warning</b> in the next ${lead} days.`:`<b>No flood expected</b> in the next ${lead} days.`}<br>River flow ${fmt(r.q)} m³/s, ${Math.round(r.q/r.thr*100)}% of the warning level.</div>
-    <h3>Live forecast issued ${prettyDate(live.issued)}</h3><div class="bars">${bars}</div>
-    <p class="note">Updated every morning from the latest river data. The model learned from river data up to ${prettyDate(live.trained_through)}; everything after that is new to it.</p>`;
-}
 function side(){
-  if(year==="Today")return sideLive();
-  const f=geo.features.find(f=>f.properties.name===sel); const st=f.properties.station; const s=daily[st];
-  const i=dates[dayIdx][1], m=monthNow(), rec=impactKey[`${sel}|${year}|${m}`];
-  const flowNow=s.q[i], thr=s.thr[i], pct=Math.round(flowNow/thr*100);
-  const leads=[1,2,3,5,7];
-  const bars=leads.map(h=>{const p=s["p"+h][i],c=s["c"+h][i];return `<div><span>${Math.round(p*100)}%</span><span class="b ${p>=c?"on":""}" style="height:${Math.max(2,p*64)}px" title="${h}-day forecast"></span>${h}d</div>`}).join("");
-  const on=warned(st);
-  const verdict = on ? `<b>Flood warning.</b> The ${lead}-day forecast at the ${st} gauge crossed its alert line.` : `<b>No warning</b> from the ${lead}-day forecast at the ${st} gauge.`;
-  let reported = rec ? (rec.pop>=1000 ? `ASDMA reported <b>${fmt(rec.pop)}</b> people affected in ${sel} in ${MONTHS[m-1]} ${year}.` : (rec.pop>0? `ASDMA reported ${fmt(rec.pop)} people affected in ${MONTHS[m-1]} ${year}.` : `ASDMA reported no one affected in ${MONTHS[m-1]} ${year}.`)) : `No ASDMA report for ${MONTHS[m-1]} ${year}.`;
-  const impact = rec && rec.p!=null ? `<p class="note">Impact model: ${Math.round(rec.p*100)}% chance of 1,000+ people affected this month (alert at ${Math.round(rec.cut*100)}%).</p>` : "";
-  $("#side").innerHTML=`
-    <h2>${sel}</h2>
-    <p class="sub">Watched by the ${st} gauge on the ${stations[st].river}</p>
-    <div class="verdict">${verdict}<br>${(()=>{const o=outcome(st);return `<span class="outcome o-${o.k}">${o.t}</span>`})()}
-      <br>What happened: ${observed(st)===null?"not known yet":observed(st)?`the river reached its warning level within ${lead} day${lead>1?"s":""}.`:`the river stayed below its warning level for the next ${lead} day${lead>1?"s":""}.`}<br>${reported}</div>
-    <h3>Forecast chance of flooding, made ${prettyDate(dates[dayIdx][0])}</h3>
-    <div class="bars">${bars}</div>
-    <p class="note">Darker bars crossed the alert line, tuned on past years only.</p>
-    ${impact}
-    <h3>River flow in ${year}</h3>
-    <svg id="hydro" viewBox="0 0 300 120" role="img" aria-label="River flow at ${st} compared with its warning level"></svg>
-    <p class="note">Today ${fmt(flowNow)} m³/s, ${pct}% of the warning level (dashed line).</p>`;
-  // hydrograph
+  const f=geo.features.find(f=>f.properties.name===sel), st=f.properties.station, s=daily[st], i=I(), m=monthNow(), rec=impactKey[`${sel}|${year}|${m}`];
+  const o=outcome(st), obs=observed(st), L=[1,2,3,5,7];
+  const bars=L.map(h=>{const p=s["p"+h][i],c=s["c"+h][i];return `<div><span>${pct(p)}</span><span class="b ${p>=c?"on":""}" style="height:${Math.max(2,p*64)}px"></span>${h}d</div>`}).join("");
+  const reported=rec?(rec.pop>=1000?`ASDMA reported <b>${fmt(rec.pop)}</b> people affected in ${MONTHS[m-1]} ${year}.`:rec.pop>0?`ASDMA reported ${fmt(rec.pop)} people affected in ${MONTHS[m-1]} ${year}.`:`ASDMA reported no one affected in ${MONTHS[m-1]} ${year}.`):`No ASDMA report for ${MONTHS[m-1]} ${year}.`;
+  $("#side").innerHTML=`<h2>${sel}</h2><p class="sub">${st} gauge on the ${stations[st].river}</p>
+    <div class="verdict"><b>${warned(st)?"Flood warning":"No warning"}</b> from the ${lead}-day forecast. <span class="chip ${o.k}">${o.t}</span><br>
+    What happened: ${obs===null?"not known yet.":obs?`the river reached its warning level within ${lead} day${lead>1?"s":""}.`:`the river stayed below its warning level.`}<br>${reported}</div>
+    <h3>Chance of flooding, forecast on ${prettyDate(dates[dayIdx][0])}</h3><div class="bars">${bars}</div>
+    <p class="note">Darker bars crossed the alert line, which was tuned on earlier years only.</p>
+    ${rec&&rec.p!=null?`<p class="note">Impact model: ${pct(rec.p)} chance of 1,000+ people affected this month (alert at ${pct(rec.cut)}).</p>`:""}
+    <h3>River flow in ${year}</h3><svg id="hydro" viewBox="0 0 300 120" role="img" aria-label="River flow at ${st} against its warning level"></svg>
+    <p class="note">That day: ${fmt(s.q[i])} m³/s, ${pct(s.q[i]/s.thr[i])} of the warning level (dashed).</p>`;
   const idx=dates.map(([,j])=>j), q=idx.map(j=>s.q[j]);
-  const x=d3.scaleLinear().domain([0,idx.length-1]).range([4,296]);
-  const y=d3.scaleLinear().domain([0,d3.max([...q,thr])*1.08]).range([104,6]);
-  const h=d3.select("#hydro");
-  h.append("path").attr("class","hy-q").attr("d",d3.line().x((d,k)=>x(k)).y(d=>y(d))(q));
-  h.append("line").attr("class","hy-thr").attr("x1",4).attr("x2",296).attr("y1",y(thr)).attr("y2",y(thr));
-  h.append("line").attr("class","hy-now").attr("x1",x(dayIdx)).attr("x2",x(dayIdx)).attr("y1",4).attr("y2",104);
-  ["Jan","Mar","May","Jul","Sep","Nov"].forEach((mn)=>{const mm=MONTHS.indexOf(mn)+1;const j=dates.findIndex(([d])=>+d.slice(5,7)===mm);if(j>=0)h.append("text").attr("class","hy-ax").attr("x",x(j)).attr("y",117).text(mn)});
+  const x=d3.scaleLinear().domain([0,idx.length-1]).range([4,296]), y=d3.scaleLinear().domain([0,d3.max([...q,s.thr[i]])*1.08]).range([104,6]);
+  const hs=d3.select("#hydro");
+  hs.append("path").attr("class","hy-q").attr("d",d3.line().x((d,k)=>x(k)).y(d=>y(d))(q));
+  hs.append("line").attr("class","hy-thr").attr("x1",4).attr("x2",296).attr("y1",y(s.thr[i])).attr("y2",y(s.thr[i]));
+  hs.append("line").attr("class","hy-now").attr("x1",x(dayIdx)).attr("x2",x(dayIdx)).attr("y1",4).attr("y2",104);
+  ["Jan","Mar","May","Jul","Sep","Nov"].forEach(mn=>{const j=dates.findIndex(([d])=>+d.slice(5,7)===MONTHS.indexOf(mn)+1);if(j>=0)hs.append("text").attr("class","ax").attr("x",x(j)).attr("y",117).text(mn)});
 }
-
 function checkBox(){
-  if(year==="Today"){$("#check").innerHTML=`Live forecast for <b>${prettyDate(live.issued)}</b>. Pick a past date above to see how the forecasts turned out.`;return}
-  const st=Object.keys(daily), out=st.map(outcome), c=k=>out.filter(o=>o.k===k).length;
-  const m=monthNow(), rep=geo.features.filter(f=>(impactKey[`${f.properties.name}|${year}|${m}`]||{}).pop>=1000).length;
-  const flooded=c("hit")+c("miss");
-  $("#check").innerHTML=c("na")===st.length?`<b>${prettyDate(dates[dayIdx][0])}</b>: too recent to check what happened next.`:
-    `<b>${prettyDate(dates[dayIdx][0])}</b>, ${lead}-day forecast: ${flooded} of ${st.length} river stations reached flood level in the next ${lead} day${lead>1?"s":""}${flooded?`, and the forecast warned for ${c("hit")} of them`:""}. ASDMA reported 1,000+ people affected in ${rep} district${rep===1?"":"s"} that month.
-    <div class="tally"><span><b>${c("hit")}</b> correct warnings</span><span><b>${c("miss")}</b> missed</span><span><b>${c("false")}</b> false alarms</span><span><b>${c("quiet")}</b> correctly quiet</span></div>`;
+  const out=ALL.map(outcome), c=t=>out.filter(o=>o.t===t).length, m=monthNow();
+  const rep=geo.features.filter(f=>(impactKey[`${f.properties.name}|${year}|${m}`]||{}).pop>=1000).length, flooded=c("Correct warning")+c("Missed flood");
+  $("#checkbox").innerHTML=c("Too recent to check")===ALL.length?`<b>${prettyDate(dates[dayIdx][0])}</b>: too recent to check what happened next.`:
+    `<b>${prettyDate(dates[dayIdx][0])}</b>: ${flooded} of 12 river stations reached flood level in the next ${lead} day${lead>1?"s":""}${flooded?`, and the forecast warned for ${c("Correct warning")} of them`:""}. ASDMA reported 1,000+ people affected in ${rep} district${rep===1?"":"s"} that month.
+    <div class="tally"><span class="chip c-ok">${c("Correct warning")} correct warning${c("Correct warning")===1?"":"s"}</span><span class="chip c-bad">${c("Missed flood")} missed</span><span class="chip c-bad">${c("False alarm")} false alarm${c("False alarm")===1?"":"s"}</span><span class="chip c-ok">${c("Correctly no warning")} correctly quiet</span></div>`;
 }
 function update(){
-  $("#date").textContent=year==="Today"?prettyDate(live.issued):prettyDate(dates[dayIdx][0]);
+  $("#date").textContent=prettyDate(dates[dayIdx][0]); $("#pick").value=dates[dayIdx][0];
   const m=monthNow();
   dSel.attr("fill",f=>color(riskOf(f.properties.station))).classed("sel",f=>f.properties.name===sel);
-  checkBox();
-  $("#pick").value=year==="Today"?live.issued:dates[dayIdx][0];
-  repSel.attr("display",f=>{if(year==="Today")return "none";const r=impactKey[`${f.properties.name}|${year}|${m}`];return r&&r.pop>=1000?null:"none"});
-  side();
+  repSel.attr("display",f=>{const r=impactKey[`${f.properties.name}|${year}|${m}`];return r&&r.pop>=1000?null:"none"});
+  checkBox(); side();
 }
-setRange();update();
+setRange();
 
-/* ---------- track record ---------- */
+/* ---------- TRACK RECORD ---------- */
 (function(){
   const F=summary.forecast, L=[1,2,3,5,7];
   const s=d3.select("#skill"), x=d3.scalePoint().domain(L).range([56,490]), y=d3.scaleLinear().domain([0,1]).range([260,20]);
-  [0,.25,.5,.75,1].forEach(v=>{s.append("line").attr("class","sk-grid").attr("x1",56).attr("x2",490).attr("y1",y(v)).attr("y2",y(v));
-    s.append("text").attr("class","sk-ax").attr("x",48).attr("y",y(v)+4).attr("text-anchor","end").text(v)});
-  L.forEach(h=>s.append("text").attr("class","sk-ax").attr("x",x(h)).attr("y",284).attr("text-anchor","middle").text(h===1?"1 day":h+" days"));
+  [0,.25,.5,.75,1].forEach(v=>{s.append("line").attr("class","gridl").attr("x1",56).attr("x2",490).attr("y1",y(v)).attr("y2",y(v));
+    s.append("text").attr("class","ax").attr("x",48).attr("y",y(v)+4).attr("text-anchor","end").text(v)});
+  L.forEach(h=>s.append("text").attr("class","ax").attr("x",x(h)).attr("y",284).attr("text-anchor","middle").text(h===1?"1 day":h+" days"));
   const line=key=>d3.line().x(h=>x(h)).y(h=>y(key(F[h])));
-  s.append("path").attr("class","sk-p").attr("d",line(d=>d.persistence_csi)(L));
-  s.append("path").attr("class","sk-m").attr("d",line(d=>d.csi)(L));
-  L.forEach(h=>{s.append("circle").attr("cx",x(h)).attr("cy",y(F[h].csi)).attr("r",4.5).attr("fill",css("--w3"));
-    s.append("text").attr("class","sk-ax").attr("x",x(h)).attr("y",y(F[h].csi)-11).attr("text-anchor","middle").attr("fill",css("--ink")).text(F[h].csi.toFixed(2))});
-  s.append("text").attr("class","sk-lab").attr("x",x(7)+4).attr("y",y(F[7].csi)-24).attr("text-anchor","end").attr("fill",css("--w3")).text("FloodWatch");
-  s.append("text").attr("class","sk-lab").attr("x",x(7)+4).attr("y",y(F[7].persistence_csi)+22).attr("text-anchor","end").attr("fill",css("--ink-2")).text("Tomorrow = today");
+  s.append("path").attr("d",line(d=>d.persistence_csi)(L)).attr("fill","none").attr("stroke",css("--ink-2")).attr("stroke-width",2).attr("stroke-dasharray","6 5");
+  s.append("path").attr("d",line(d=>d.csi)(L)).attr("fill","none").attr("stroke",css("--brand")).attr("stroke-width",3);
+  L.forEach(h=>{s.append("circle").attr("cx",x(h)).attr("cy",y(F[h].csi)).attr("r",4.5).attr("fill",css("--brand"));
+    s.append("text").attr("class","ax").attr("x",x(h)).attr("y",y(F[h].csi)-11).attr("text-anchor","middle").attr("fill",css("--ink")).text(F[h].csi.toFixed(2))});
+  s.append("text").attr("x",x(7)+4).attr("y",y(F[7].csi)-26).attr("text-anchor","end").attr("fill",css("--brand")).attr("font-weight",600).attr("font-size",13).text("FloodWatch");
+  s.append("text").attr("x",x(7)+4).attr("y",y(F[7].persistence_csi)+22).attr("text-anchor","end").attr("fill",css("--ink-2")).attr("font-weight",600).attr("font-size",13).text("Tomorrow = today");
   const e=summary.events;
-  $("#events").textContent=`At 1 day ahead it caught ${Math.round(F[1].hit_rate*100)}% of flood days with ${Math.round(F[1].false_alarm_ratio*100)}% false alarms. It warned before ${Math.round(e.warned_1plus_days*100)}% of the ${e.n_onsets} flood onsets, but only ${Math.round(e.warned_3plus_days*100)}% got three or more days' notice.`;
-
-  const S=summary.impact_strict, Y=summary.impact_loyo;
-  const rows=[
-    ["FloodWatch impact model",Y.impact_model,true],
-    ["River forecast alone",Y.river_forecast_only],
-    ["Every June and July",Y.climatology_jun_jul],
-    ["District flood history",Y.district_history_only],
-    ["River observed above warning",Y.river_observed_above_warning],
-  ];
+  $("#events").textContent=`A day ahead it caught ${pct(F[1].hit_rate)} of flood days with ${pct(F[1].false_alarm_ratio)} false alarms. It warned before ${pct(e.warned_1plus_days)} of the ${e.n_onsets} flood onsets, but only ${pct(e.warned_3plus_days)} got three or more days' notice.`;
+  const Y=summary.impact_loyo, S=summary.impact_strict, py=S.per_year;
+  const rows=[["FloodWatch impact model",Y.impact_model,true],["River forecast alone",Y.river_forecast_only],["Every June and July",Y.climatology_jun_jul],["District flood history",Y.district_history_only],["River observed above warning",Y.river_observed_above_warning]];
   $("#impacttable").innerHTML=`<thead><tr><th>Method</th><th class="n">Floods warned</th><th class="n">False alarms</th><th class="n">CSI</th></tr></thead><tbody>`+
-    rows.map(([n,r,o])=>`<tr class="${o?"ours":""}"><td>${n}</td><td class="n">${Math.round(r.hit_rate*100)}%</td><td class="n">${Math.round(r.false_alarm_ratio*100)}%</td><td class="n">${r.csi.toFixed(2)}</td></tr>`).join("")+"</tbody>";
-  const py=S.per_year;
-  $("#honest").innerHTML=`ASDMA's district records start in 2021, so the impact model above is tested by holding out one year at a time. Trained strictly on earlier years only, it scores ${py[2022].toFixed(2)} in 2022 with one year to learn from, then ${py[2023].toFixed(2)}, ${py[2024].toFixed(2)}, ${py[2025].toFixed(2)} and ${py[2026].toFixed(2)} in 2023–2026. It beats the calendar baseline in three of those four years, and gets better as more history accumulates. Rainfall and pre-2021 reports are being added.`;
+    rows.map(([n,r,o])=>`<tr class="${o?"ours":""}"><td>${n}</td><td class="n">${pct(r.hit_rate)}</td><td class="n">${pct(r.false_alarm_ratio)}</td><td class="n">${r.csi.toFixed(2)}</td></tr>`).join("")+"</tbody>";
+  $("#honest").innerHTML=`<b>A stricter test.</b> ASDMA's district records start in 2021, so the table holds out one year at a time. Trained only on earlier years, the impact model scores ${py[2022].toFixed(2)} in 2022 with one year to learn from, then ${py[2023].toFixed(2)}, ${py[2024].toFixed(2)}, ${py[2025].toFixed(2)} and ${py[2026].toFixed(2)} in 2023–2026. It beats the calendar baseline in three of those four years and improves as history accumulates.`;
 })();
 
-/* ---------- satellite ---------- */
+/* ---------- SATELLITE ---------- */
 (function(){
   const g=summary.segmentation;
   $("#segstats").innerHTML=`
-    <div><b>${g.unet.water_iou.toFixed(2)}</b><span>water overlap (IoU) on held-out scenes, versus ${g.otsu_baseline.water_iou.toFixed(2)} for the brightness-threshold method agencies use</span></div>
-    <div><b>${Math.round(g.unet.accuracy*100)}%</b><span>of pixels classified correctly as water or land</span></div>
-    <div><b>${g.bolivia.water_iou.toFixed(2)}</b><span>on a flood in Bolivia the model never saw, from a country absent from training</span></div>`;
-  $("#scenes").innerHTML=scenes.map((s,k)=>`
-    <div class="scene">
-      <figure><img src="img/${s.id}_radar.png" alt="Sentinel-1 radar image near ${s.lat}°N ${s.lon}°E" loading="lazy" width="320" height="320"><figcaption>Radar image</figcaption></figure>
-      <figure><img src="img/${s.id}_label.png" alt="Hand-drawn flood outline" loading="lazy" width="320" height="320"><figcaption>Expert's flood outline</figcaption></figure>
-      <figure><img src="img/${s.id}_pred.png" alt="FloodWatch flood prediction" loading="lazy" width="320" height="320"><figcaption>FloodWatch prediction</figcaption></figure>
-      <div class="meta"><b>${s.iou.toFixed(2)}</b>overlap with the expert's outline. Near ${s.lat}°N, ${s.lon}°E.${k===scenes.length-1?" The hardest Assam scene: wet fields and river sandbars look like open water on radar.":""}</div>
-    </div>`).join("");
+    <div class="card"><b>${g.unet.water_iou.toFixed(2)}</b><span>water overlap (IoU) on held-out scenes, against ${g.otsu_baseline.water_iou.toFixed(2)} for the brightness threshold agencies use</span></div>
+    <div class="card"><b>${Math.round(g.unet.accuracy*100)}%</b><span>of pixels correctly classified as water or land</span></div>
+    <div class="card"><b>${g.bolivia.water_iou.toFixed(2)}</b><span>on a flood in Bolivia, a country the model never saw in training</span></div>`;
+  $("#scenes").innerHTML=scenes.map((s,k)=>`<div class="scene">
+    <figure><img src="img/${s.id}_radar.png" alt="Sentinel-1 radar image near ${s.lat}°N ${s.lon}°E" loading="lazy" width="320" height="320"><figcaption>Radar image</figcaption></figure>
+    <figure><img src="img/${s.id}_label.png" alt="Expert's flood outline" loading="lazy" width="320" height="320"><figcaption>Expert's flood outline</figcaption></figure>
+    <figure><img src="img/${s.id}_pred.png" alt="FloodWatch prediction" loading="lazy" width="320" height="320"><figcaption>FloodWatch prediction</figcaption></figure>
+    <div class="meta"><b>${s.iou.toFixed(2)}</b>overlap with the expert's outline, near ${s.lat}°N ${s.lon}°E.${k===scenes.length-1?" The hardest Assam scene: wet fields and sandbars look like open water on radar.":""}</div></div>`).join("");
 })();
 
+route();
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>location.reload());
 })();
 </script>
