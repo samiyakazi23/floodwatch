@@ -58,7 +58,36 @@ def thresholds(flows: pd.DataFrame, last_train_year: int, level: str | None = No
     return train.groupby(train.index.year).max().quantile(LEVELS[level or LEVEL])
 
 
-def build_features(flows: pd.DataFrame) -> pd.DataFrame:
+RAIN_DIR = Path("data/rain")
+import os
+USE_RAIN = os.getenv("FW_RAIN", "0") == "1"
+
+
+def load_rain() -> pd.DataFrame | None:
+    """Daily rainfall (mm) at catchment points, wide frame. None if not downloaded."""
+    if not RAIN_DIR.exists() or not any(RAIN_DIR.glob("*.json")):
+        return None
+    cols = {}
+    for f in sorted(RAIN_DIR.glob("*.json")):
+        d = json.loads(f.read_text())
+        cols[f.stem] = pd.Series(d["rain"], index=pd.to_datetime(d["time"]), dtype=float)
+    return pd.DataFrame(cols)
+
+
+def rain_features(rain: pd.DataFrame, index: pd.DatetimeIndex) -> pd.DataFrame:
+    """Rain over the last 1, 3, 7 and 30 days at each point (log mm), up to and including the day."""
+    r = rain.reindex(index).fillna(0.0)
+    out = {}
+    for p in r.columns:
+        for w in (1, 3, 7, 30):
+            out[f"rain_{p}_{w}d"] = np.log1p(r[p].rolling(w, min_periods=1).sum())
+    allr = r.mean(axis=1)
+    for w in (3, 7):
+        out[f"rain_basin_{w}d"] = np.log1p(allr.rolling(w, min_periods=1).sum())
+    return pd.DataFrame(out, index=index)
+
+
+def build_features(flows: pd.DataFrame, rain: pd.DataFrame | None = None) -> pd.DataFrame:
     """Long frame: one row per (date, station) with own + all-station features available on that date."""
     logq = np.log1p(flows)
     shared = {}
@@ -69,6 +98,8 @@ def build_features(flows: pd.DataFrame) -> pd.DataFrame:
         shared[f"all_{s}_chg1"] = logq[s] - logq[s].shift(1)
         shared[f"all_{s}_max3"] = logq[s].rolling(3).max()
     shared = pd.DataFrame(shared, index=flows.index)
+    if rain is not None:
+        shared = pd.concat([shared, rain_features(rain, flows.index)], axis=1)
     doy = flows.index.dayofyear
     shared["doy_sin"], shared["doy_cos"] = np.sin(2 * np.pi * doy / 365.25), np.cos(2 * np.pi * doy / 365.25)
 
@@ -135,7 +166,7 @@ def best_cut(y: np.ndarray, p: np.ndarray) -> float:
 
 def backtest() -> dict:
     flows = load_flows()
-    base = build_features(flows)
+    base = build_features(flows, load_rain() if USE_RAIN else None)
     results: dict = {"stations": list(flows.columns), "test_years": TEST_YEARS, "level": LEVEL, "target": "flood level reached within the next h days", "horizons": {}}
     preds_all, cuts = [], {}
     for year in TEST_YEARS:
@@ -232,8 +263,9 @@ if __name__ == "__main__":
         print(json.dumps(train_final(), indent=1)[:600]); raise SystemExit
     res, preds = backtest()
     Path("reports").mkdir(exist_ok=True)
-    Path("reports/forecast_backtest.json").write_text(json.dumps(res, indent=2, default=str))
-    preds.to_csv("reports/backtest_predictions.csv.gz", index=False)
+    tag = "_rain" if USE_RAIN else ""
+    Path(f"reports/forecast_backtest{tag}.json").write_text(json.dumps(res, indent=2, default=str))
+    preds.to_csv(f"reports/backtest_predictions{tag}.csv.gz", index=False)
     summary = {h: {"model": v["model"], "persistence": v["persistence_baseline"], "pr_auc": v["pr_auc"]} for h, v in res["horizons"].items()}
     print(json.dumps(summary, indent=1))
     print(json.dumps({k: v for k, v in res["events"].items() if k != "list"}, indent=1))

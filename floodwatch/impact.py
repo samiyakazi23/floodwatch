@@ -27,7 +27,34 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from .validate_asdma import MIN_AFFECTED, district_station_map, load_truth, score
+import math
+import os
+
+from .forecast import load_rain
+from .validate_asdma import MIN_AFFECTED, centroid, district_station_map, load_truth, score
+
+USE_RAIN = os.getenv("FW_RAIN", "0") == "1"
+
+
+def district_rain_month() -> pd.DataFrame:
+    """Per district-month: total rain and wettest 3-day spell at the district's nearest rain point."""
+    rain = load_rain()
+    pts = {f.stem: json.loads(f.read_text()) for f in Path("data/rain").glob("*.json")}
+    geo = json.loads(Path("data/geo/assam_districts.geojson").read_text())
+    r3 = rain.rolling(3, min_periods=1).sum()
+    rows = []
+    for f in geo["features"]:
+        name = f["properties"]["dtname"]; lat, lon = centroid(f["geometry"])
+        near = min(pts, key=lambda k: math.hypot(pts[k]["lat"] - lat, (pts[k]["lon"] - lon) * math.cos(math.radians(lat))))
+        m = pd.DataFrame({"tot": rain[near], "max3": r3[near], "basin": rain.mean(axis=1)})
+        g = m.groupby([m.index.year, m.index.month]).agg(rain_month=("tot", "sum"), rain_max3=("max3", "max"), rain_basin=("basin", "sum"))
+        g.index.names = ["year", "month"]
+        g = g.reset_index(); g["district"] = name
+        rows.append(g)
+    out = pd.concat(rows)
+    for c in ("rain_month", "rain_max3", "rain_basin"):
+        out[c] = np.log1p(out[c])
+    return out
 
 HORIZONS = [1, 2, 3, 5, 7]
 UPSTREAM = {  # next station up the main stem (tributary stations use the main-stem station they join near)
@@ -51,7 +78,8 @@ def station_month_features(preds: pd.DataFrame) -> pd.DataFrame:
     return f.reset_index()
 
 
-def build_table(preds_path: str = "reports/backtest_predictions.csv.gz") -> pd.DataFrame:
+def build_table(preds_path: str | None = None) -> pd.DataFrame:
+    preds_path = preds_path or ("reports/backtest_predictions_rain.csv.gz" if USE_RAIN else "reports/backtest_predictions.csv.gz")
     preds = pd.read_csv(preds_path, parse_dates=["date"])
     sm = station_month_features(preds)
     dmap = district_station_map()
@@ -62,6 +90,8 @@ def build_table(preds_path: str = "reports/backtest_predictions.csv.gz") -> pd.D
     t = t.merge(sm, on=["station_name", "year", "month"], how="inner")
     up = sm.add_prefix("up_").rename(columns={"up_station_name": "up_station", "up_year": "year", "up_month": "month"})
     t = t.merge(up, on=["up_station", "year", "month"], how="left")
+    if USE_RAIN:
+        t = t.merge(district_rain_month(), on=["district", "year", "month"], how="left")
     t["y"] = (t.pop_affected >= MIN_AFFECTED).astype(int)
     for m in range(5, 11):
         t[f"m{m}"] = (t.month == m).astype(int)
@@ -132,9 +162,33 @@ def leave_one_year_out(t: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
     return res, summary
 
 
+def strict_walkforward(t: pd.DataFrame, first: int = 2022) -> dict:
+    """Each year predicted by a model trained ONLY on earlier years (cut-off tuned on the latest past year)."""
+    rows = []
+    for year in sorted(y for y in t.year.unique() if y >= first):
+        train, test = add_history(t[t.year < year], t[t.year == year])
+        cols = feature_cols(train)
+        if train.year.nunique() >= 2:
+            a, b = add_history(train[train.year < year - 1], train[train.year == year - 1])
+            cut = best_cut(b.y.to_numpy(), make_model().fit(a[cols], a.y).predict_proba(b[cols])[:, 1])
+        else:
+            cut = 0.5
+        out = test[["year", "month", "y", "warn_3_sum"]].copy()
+        out["warn"] = make_model().fit(train[cols], train.y).predict_proba(test[cols])[:, 1] >= cut
+        rows.append(out)
+    r = pd.concat(rows)
+    sc = lambda g: score(g.y.astype(bool).to_numpy(), g.warn.to_numpy())
+    late = r[r.year >= 2023]
+    return {"all_years": sc(r), "from_2023": sc(late),
+            "climatology_from_2023": score(late.y.astype(bool).to_numpy(), late.month.isin([6, 7]).to_numpy()),
+            "per_year": {int(k): sc(g)["csi"] for k, g in r.groupby("year")}}
+
+
 if __name__ == "__main__":
     t = build_table()
     res, summary = leave_one_year_out(t)
-    Path("reports/impact_validation.json").write_text(json.dumps(summary, indent=2))
-    res.to_csv("reports/impact_predictions.csv", index=False)
+    summary["strict_walkforward"] = strict_walkforward(t)
+    tag = "_rain" if USE_RAIN else ""
+    Path(f"reports/impact_validation{tag}.json").write_text(json.dumps(summary, indent=2))
+    res.to_csv(f"reports/impact_predictions{tag}.csv", index=False)
     print(json.dumps(summary, indent=1))

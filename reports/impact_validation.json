@@ -44,5 +44,35 @@
     "2025": 0.384,
     "2026": 0.434
   },
-  "share_of_affected_people_in_warned_months": 0.692
+  "share_of_affected_people_in_warned_months": 0.692,
+  "strict_walkforward": {
+    "all_years": {
+      "hit_rate": 0.588,
+      "false_alarm_ratio": 0.533,
+      "csi": 0.352,
+      "flooded": 267,
+      "warned": 336
+    },
+    "from_2023": {
+      "hit_rate": 0.735,
+      "false_alarm_ratio": 0.507,
+      "csi": 0.419,
+      "flooded": 196,
+      "warned": 292
+    },
+    "climatology_from_2023": {
+      "hit_rate": 0.602,
+      "false_alarm_ratio": 0.553,
+      "csi": 0.345,
+      "flooded": 196,
+      "warned": 264
+    },
+    "per_year": {
+      "2022": 0.127,
+      "2023": 0.466,
+      "2024": 0.469,
+      "2025": 0.288,
+      "2026": 0.407
+    }
+  }
 }

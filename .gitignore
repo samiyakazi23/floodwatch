@@ -3,6 +3,5 @@ __pycache__/
 .venv/
 .pytest_cache/
 data/sen1floods11/
-data/rain/
 data/asdma/civicdatalab_master_variables.csv
 models/flood_unet.pt
