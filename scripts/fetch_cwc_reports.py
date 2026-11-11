@@ -4,7 +4,7 @@ CWC publishes a daily PDF listing the gauge sites in flood (Above Normal / Sever
 File names changed over the years, so several patterns are tried per day.
 Output: data/cwc/text/YYYY-MM-DD.txt (pdftotext -layout) and data/cwc/index.csv
 """
-import csv, datetime as dt, subprocess, time, pathlib, urllib.request, urllib.error, sys
+import csv, datetime as dt, subprocess, time, pathlib, urllib.request, urllib.error, sys, shutil, tempfile
 
 BASE = "https://cwc.gov.in/sites/default/files/"
 OUT = pathlib.Path("data/cwc/text"); OUT.mkdir(parents=True, exist_ok=True)
@@ -22,6 +22,15 @@ def patterns(d: dt.date):
         yield stem + "-0.pdf"
 
 errors = {}
+
+def pdf_text(pdf: bytes) -> str:
+    """pdftotext -layout if installed (CI), otherwise pypdf (pip install pypdf) so no Homebrew is needed."""
+    if shutil.which("pdftotext"):
+        p = pathlib.Path(tempfile.gettempdir()) / "cwc_r.pdf"; p.write_bytes(pdf)
+        return subprocess.run(["pdftotext", "-layout", str(p), "-"], capture_output=True, text=True).stdout
+    import io, pypdf
+    pages = pypdf.PdfReader(io.BytesIO(pdf)).pages
+    return "\n".join(pg.extract_text(extraction_mode="layout") or "" for pg in pages)
 
 def get(url):
     """Return PDF bytes, or None. Non-404 failures are counted so a blocked run is visible."""
@@ -50,8 +59,7 @@ for year in YEARS:
             time.sleep(0.15)
             if pdf:
                 hit = name
-                p = pathlib.Path("/tmp/r.pdf"); p.write_bytes(pdf)
-                txt = subprocess.run(["pdftotext", "-layout", str(p), "-"], capture_output=True, text=True).stdout
+                txt = pdf_text(pdf)
                 (OUT / f"{d}.txt").write_text(txt)
                 break
         rows.append({"date": str(d), "file": hit or ""})
