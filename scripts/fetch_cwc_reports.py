@@ -4,7 +4,7 @@ CWC publishes a daily PDF listing the gauge sites in flood (Above Normal / Sever
 File names changed over the years, so several patterns are tried per day.
 Output: data/cwc/text/YYYY-MM-DD.txt (pdftotext -layout) and data/cwc/index.csv
 """
-import csv, datetime as dt, subprocess, time, pathlib, urllib.request, sys
+import csv, datetime as dt, subprocess, time, pathlib, urllib.request, urllib.error, sys
 
 BASE = "https://cwc.gov.in/sites/default/files/"
 OUT = pathlib.Path("data/cwc/text"); OUT.mkdir(parents=True, exist_ok=True)
@@ -12,18 +12,32 @@ UA = {"User-Agent": "Mozilla/5.0 (research; FloodWatch flood-forecast verificati
 
 def patterns(d: dt.date):
     a, b, c = d.strftime("%d%m%Y"), d.strftime("%d.%m.%Y"), d.strftime("%d%m%y")
-    for stem in (f"dfsitrepca-{a}", f"dfsitrepca{a}", f"dfsitrepca-{b}", f"dfsitrepca{b}", f"dfsitrepca{c}", f"dfsitrepca-{c}"):
+    # dd.mm.yyyy first: the form CWC used in 2024 (dfsitrepca-08.09.2024.pdf, dfsra-21.07.2024.pdf)
+    stems = []
+    for pre in ("dfsitrepca", "dfsra"):
+        stems += [f"{pre}-{b}", f"{pre}{b}", f"{pre}-{a}", f"{pre}{a}", f"{pre}-{c}", f"{pre}{c}"]
+    for stem in stems:
         yield stem + ".pdf"
         yield stem + "-1.pdf"
         yield stem + "-0.pdf"
 
+errors = {}
+
 def get(url):
+    """Return PDF bytes, or None. Non-404 failures are counted so a blocked run is visible."""
     try:
         with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=30) as r:
             data = r.read()
-            return data if data[:4] == b"%PDF" else None
-    except Exception:
-        return None
+            if data[:4] == b"%PDF":
+                return data
+            errors["not a PDF (HTML page?)"] = errors.get("not a PDF (HTML page?)", 0) + 1
+    except urllib.error.HTTPError as e:
+        if e.code != 404:
+            errors[f"HTTP {e.code}"] = errors.get(f"HTTP {e.code}", 0) + 1
+    except Exception as e:
+        k = type(e).__name__
+        errors[k] = errors.get(k, 0) + 1
+    return None
 
 rows = []
 YEARS = [int(sys.argv[1])] if len(sys.argv) > 1 else range(2021, 2027)
@@ -45,4 +59,8 @@ for year in YEARS:
         d += dt.timedelta(days=1)
 with open(f"data/cwc/index_{YEARS[0] if len(YEARS) == 1 else 'all'}.csv", "w", newline="") as f:
     w = csv.DictWriter(f, fieldnames=["date", "file"]); w.writeheader(); w.writerows(rows)
-print("found", sum(1 for r in rows if r["file"]), "of", len(rows))
+found = sum(1 for r in rows if r["file"])
+print("found", found, "of", len(rows))
+print("non-404 failures:", errors or "none")
+if found == 0:
+    sys.exit("No reports downloaded - CWC is probably blocking this machine. Run it from an Indian network.")

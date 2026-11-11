@@ -6,7 +6,16 @@ on:
 permissions:
   contents: write
 jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check that a known CWC report is reachable from the runner
+        run: |
+          curl -sS -m 30 -A "Mozilla/5.0" -o r.pdf -w "HTTP %{http_code}, %{size_download} bytes, %{content_type}\n" \
+            https://cwc.gov.in/sites/default/files/dfsitrepca-08.09.2024.pdf || true
+          head -c 4 r.pdf | grep -q %PDF && echo "OK: got a PDF" || { echo "BLOCKED: no PDF returned"; head -c 400 r.pdf; exit 1; }
   fetch:
+    needs: probe
     runs-on: ubuntu-latest
     timeout-minutes: 120
     strategy:
