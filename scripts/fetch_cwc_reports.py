@@ -22,6 +22,13 @@ def patterns(d: dt.date):
         yield stem + "-0.pdf"
 
 errors = {}
+first_error = {}
+
+try:  # python.org builds on macOS ship without CA certificates; certifi fixes CERTIFICATE_VERIFY_FAILED
+    import ssl, certifi
+    CTX = ssl.create_default_context(cafile=certifi.where())
+except ImportError:
+    CTX = None
 
 def pdf_text(pdf: bytes) -> str:
     """pdftotext -layout if installed (CI), otherwise pypdf (pip install pypdf) so no Homebrew is needed."""
@@ -35,7 +42,7 @@ def pdf_text(pdf: bytes) -> str:
 def get(url):
     """Return PDF bytes, or None. Non-404 failures are counted so a blocked run is visible."""
     try:
-        with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=30) as r:
+        with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=30, context=CTX) as r:
             data = r.read()
             if data[:4] == b"%PDF":
                 return data
@@ -46,7 +53,17 @@ def get(url):
     except Exception as e:
         k = type(e).__name__
         errors[k] = errors.get(k, 0) + 1
+        first_error.setdefault(k, str(getattr(e, "reason", e)))
     return None
+
+if len(sys.argv) > 1 and sys.argv[1] == "--test":  # quick check on one report that is known to exist
+    pdf = get(BASE + "dfsitrepca-08.09.2024.pdf")
+    if pdf:
+        t = pdf_text(pdf)
+        print("OK: downloaded and read a CWC report.", "Rows mention Assam:", "Assam" in t)
+    else:
+        print("FAILED:", errors, first_error)
+    sys.exit(0 if pdf else 1)
 
 rows = []
 YEARS = [int(sys.argv[1])] if len(sys.argv) > 1 else range(2021, 2027)
@@ -69,6 +86,6 @@ with open(f"data/cwc/index_{YEARS[0] if len(YEARS) == 1 else 'all'}.csv", "w", n
     w = csv.DictWriter(f, fieldnames=["date", "file"]); w.writeheader(); w.writerows(rows)
 found = sum(1 for r in rows if r["file"])
 print("found", found, "of", len(rows))
-print("non-404 failures:", errors or "none")
+print("non-404 failures:", errors or "none", first_error or "")
 if found == 0:
     sys.exit("No reports downloaded - CWC is probably blocking this machine. Run it from an Indian network.")
