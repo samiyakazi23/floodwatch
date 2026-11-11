@@ -1,0 +1,21 @@
+name: Collect CWC flood reports (one-off)
+on:
+  push:
+    branches: [cwc-data]
+    paths: [scripts/fetch_cwc_reports.py, .github/workflows/cwc_fetch.yml]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -q && sudo apt-get install -y -q poppler-utils
+      - run: python3 scripts/fetch_cwc_reports.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/cwc
+          git commit -m "CWC daily flood reports, monsoon 2021-2026 (text)" || echo "nothing to commit"
+          git push
