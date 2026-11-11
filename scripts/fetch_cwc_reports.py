@@ -4,7 +4,7 @@ CWC publishes a daily PDF listing the gauge sites in flood (Above Normal / Sever
 File names changed over the years, so several patterns are tried per day.
 Output: data/cwc/text/YYYY-MM-DD.txt (pdftotext -layout) and data/cwc/index.csv
 """
-import csv, datetime as dt, subprocess, time, pathlib, urllib.request
+import csv, datetime as dt, subprocess, time, pathlib, urllib.request, sys
 
 BASE = "https://cwc.gov.in/sites/default/files/"
 OUT = pathlib.Path("data/cwc/text"); OUT.mkdir(parents=True, exist_ok=True)
@@ -26,13 +26,14 @@ def get(url):
         return None
 
 rows = []
-for year in range(2021, 2027):
+YEARS = [int(sys.argv[1])] if len(sys.argv) > 1 else range(2021, 2027)
+for year in YEARS:
     d, end = dt.date(year, 5, 1), dt.date(year, 10, 31)
     while d <= end:
         hit = None
         for name in patterns(d):
             pdf = get(BASE + name)
-            time.sleep(0.3)
+            time.sleep(0.15)
             if pdf:
                 hit = name
                 p = pathlib.Path("/tmp/r.pdf"); p.write_bytes(pdf)
@@ -42,6 +43,6 @@ for year in range(2021, 2027):
         rows.append({"date": str(d), "file": hit or ""})
         print(d, hit, flush=True)
         d += dt.timedelta(days=1)
-with open("data/cwc/index.csv", "w", newline="") as f:
+with open(f"data/cwc/index_{YEARS[0] if len(YEARS) == 1 else 'all'}.csv", "w", newline="") as f:
     w = csv.DictWriter(f, fieldnames=["date", "file"]); w.writeheader(); w.writerows(rows)
 print("found", sum(1 for r in rows if r["file"]), "of", len(rows))
