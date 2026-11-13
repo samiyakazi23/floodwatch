@@ -1,0 +1,131 @@
+{
+ "river": {
+  "1": {
+   "blocks": 72,
+   "csi": 0.823,
+   "csi_ci": [
+    0.659,
+    0.896
+   ],
+   "gain_vs_persistence_ci": [
+    0.053,
+    0.17
+   ],
+   "gain_from_rain_ci": [
+    -0.01,
+    0.041
+   ]
+  },
+  "2": {
+   "blocks": 72,
+   "csi": 0.724,
+   "csi_ci": [
+    0.538,
+    0.821
+   ],
+   "gain_vs_persistence_ci": [
+    0.035,
+    0.147
+   ],
+   "gain_from_rain_ci": [
+    -0.024,
+    0.03
+   ]
+  },
+  "3": {
+   "blocks": 72,
+   "csi": 0.639,
+   "csi_ci": [
+    0.444,
+    0.756
+   ],
+   "gain_vs_persistence_ci": [
+    0.017,
+    0.114
+   ],
+   "gain_from_rain_ci": [
+    -0.019,
+    0.027
+   ]
+  },
+  "5": {
+   "blocks": 72,
+   "csi": 0.505,
+   "csi_ci": [
+    0.332,
+    0.631
+   ],
+   "gain_vs_persistence_ci": [
+    -0.033,
+    0.085
+   ],
+   "gain_from_rain_ci": [
+    -0.036,
+    0.042
+   ]
+  },
+  "7": {
+   "blocks": 72,
+   "csi": 0.425,
+   "csi_ci": [
+    0.277,
+    0.545
+   ],
+   "gain_vs_persistence_ci": [
+    -0.047,
+    0.079
+   ],
+   "gain_from_rain_ci": [
+    -0.052,
+    0.006
+   ]
+  }
+ },
+ "impact": {
+  "blocks": 35,
+  "impact_ci": [
+   0.318,
+   0.48
+  ],
+  "calendar_ci": [
+   0.187,
+   0.436
+  ],
+  "river_ci": [
+   0.183,
+   0.431
+  ],
+  "history_ci": [
+   0.254,
+   0.354
+  ],
+  "gain_vs_calendar_ci": [
+   -0.002,
+   0.181
+  ],
+  "one_sided_p": 0.029
+ },
+ "daily_2022_mcnemar": {
+  "1": {
+   "rain_only": 6,
+   "river_only": 0,
+   "p": 0.0312
+  },
+  "3": {
+   "rain_only": 14,
+   "river_only": 0,
+   "p": 0.0001
+  },
+  "5": {
+   "rain_only": 7,
+   "river_only": 0,
+   "p": 0.0156
+  }
+ },
+ "station_onsets_mcnemar": {
+  "onsets": 62,
+  "rain_only": 11,
+  "river_only": 4,
+  "p": 0.118
+ }
+}
