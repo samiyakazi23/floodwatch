@@ -10,23 +10,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f2f6f5; --surface:#ffffff; --ink:#0f2420; --ink-2:#526661; --line:#dce5e2;
-  --brand-900:#06302c; --brand-700:#0b5d55; --brand:#0f766e; --brand-400:#2aa596; --brand-50:#e5f3f0;
+  --bg:#f3f6fa; --surface:#ffffff; --ink:#0f1d2b; --ink-2:#51606f; --line:#dbe3ec;
+  --brand-900:#0a2540; --brand-700:#0f4c8a; --brand:#1565c0; --brand-400:#3b8fe0; --brand-50:#e7f0fb;
   --ok:#15803d; --ok-bg:#e7f5ec; --warn:#a85407; --warn-bg:#fdf1e0; --bad:#b91c1c; --bad-bg:#fdeceb;
-  --r0:#e4efec; --r1:#a3d1c8; --r2:#4aae9f; --r3:#147f72; --r4:#0a4740;
-  --silt:#a8873f; --shadow:0 1px 2px rgba(15,36,32,.06),0 8px 24px rgba(15,36,32,.06);
+  --r0:#e3edf8; --r1:#a9c8ea; --r2:#5d9bd9; --r3:#2468b8; --r4:#0c3c78;
+  --silt:#a8873f; --shadow:0 1px 2px rgba(15,29,43,.06),0 8px 24px rgba(15,29,43,.06);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0c1715; --surface:#132220; --ink:#e4eeeb; --ink-2:#9fb3ad; --line:#24403b;
-  --brand-50:#16332f; --brand-400:#5cc7b7;
+  --bg:#0b1520; --surface:#121f2d; --ink:#e3ebf3; --ink-2:#9db0c3; --line:#22364b;
+  --brand-50:#14283f; --brand-400:#6aaef0;
   --ok:#5fd48a; --ok-bg:#163526; --warn:#f2b661; --warn-bg:#3a2a12; --bad:#ff8580; --bad-bg:#3c1a1a;
-  --r0:#1b2f2c; --r1:#1e5a52; --r2:#2a8a7d; --r3:#4fc0ae; --r4:#a7ecdf; --silt:#d6b673; --shadow:none;
+  --r0:#182636; --r1:#1d4a7a; --r2:#2f6fb5; --r3:#5a9ee6; --r4:#b0d4fa; --silt:#d6b673; --shadow:none;
 }}
 :root[data-theme="dark"]{
-  --bg:#0c1715; --surface:#132220; --ink:#e4eeeb; --ink-2:#9fb3ad; --line:#24403b;
-  --brand-50:#16332f; --brand-400:#5cc7b7;
+  --bg:#0b1520; --surface:#121f2d; --ink:#e3ebf3; --ink-2:#9db0c3; --line:#22364b;
+  --brand-50:#14283f; --brand-400:#6aaef0;
   --ok:#5fd48a; --ok-bg:#163526; --warn:#f2b661; --warn-bg:#3a2a12; --bad:#ff8580; --bad-bg:#3c1a1a;
-  --r0:#1b2f2c; --r1:#1e5a52; --r2:#2a8a7d; --r3:#4fc0ae; --r4:#a7ecdf; --silt:#d6b673; --shadow:none;
+  --r0:#182636; --r1:#1d4a7a; --r2:#2f6fb5; --r3:#5a9ee6; --r4:#b0d4fa; --silt:#d6b673; --shadow:none;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -60,20 +60,20 @@ h1,h2,h3{font-family:"Bricolage Grotesque",sans-serif;margin:0;line-height:1.12}
 @media (max-width:900px){.nav .wrap{flex-wrap:wrap;height:auto;padding-block:10px;gap:8px 16px}.links{order:3;flex-basis:100%}.nav .code{margin-left:auto}}
 
 /* home hero */
-.hero{position:relative;color:#eaf7f4;background:linear-gradient(118deg,var(--brand-900) 0%,#0a4d46 45%,var(--brand) 100%);padding:64px 0 120px;overflow:hidden}
+.hero{position:relative;color:#eaf3fc;background:linear-gradient(118deg,var(--brand-900) 0%,#0d3f73 45%,var(--brand) 100%);padding:64px 0 120px;overflow:hidden}
 .hero::after{content:"";position:absolute;left:-5%;right:-5%;bottom:-1px;height:90px;background:var(--bg);border-radius:50% 50% 0 0/100% 100% 0 0}
 .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:center}
 @media (max-width:980px){.hero .wrap{grid-template-columns:1fr}}
 .pill{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22)}
 .pill b{width:8px;height:8px;border-radius:50%;background:#5fe0a4;box-shadow:0 0 0 4px rgba(95,224,164,.18)}
 .hero h1{font-size:clamp(40px,6vw,72px);font-weight:800;letter-spacing:-.03em;margin:20px 0 18px;color:#fff;font-variation-settings:"opsz" 96}
-.hero p.lede{font-size:19px;max-width:54ch;color:#cfe9e3;margin:0}
+.hero p.lede{font-size:19px;max-width:54ch;color:#d3e4f5;margin:0}
 .hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin:30px 0 36px}
-.btn-white{background:#fff;color:var(--brand-900)} .btn-white:hover{background:#eefaf7}
+.btn-white{background:#fff;color:var(--brand-900)} .btn-white:hover{background:#eef5fd}
 .btn-ghost{color:#fff;border-color:rgba(255,255,255,.45)} .btn-ghost:hover{background:rgba(255,255,255,.08)}
-.stats{display:flex;flex-wrap:wrap;gap:20px 44px}
+.stats{display:flex;flex-wrap:wrap;gap:20px 36px}
 .stats div b{display:block;font:800 28px "Bricolage Grotesque";color:#fff}
-.stats div span{font-size:14px;color:#b9ddd5}
+.stats div span{font-size:14px;color:#b8d0ea}
 .outlook{background:var(--surface);color:var(--ink);border-radius:18px;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.25);border-top:5px solid var(--ok)}
 .outlook.warn{border-top-color:var(--warn)} .outlook.bad{border-top-color:var(--bad)}
 .outlook .head{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px}
@@ -232,7 +232,7 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 .details-h{margin:34px 0 4px;font-size:22px;font-weight:800}
 .footlinks{display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:14px}
 .footlinks a{font-weight:600;text-decoration:none}
-footer{margin-top:80px;background:var(--brand-900);color:#cfe3de;padding:36px 0 44px;font-size:14px}
+footer{margin-top:80px;background:var(--brand-900);color:#cddbea;padding:36px 0 44px;font-size:14px}
 footer a{color:#fff}
 footer p{max-width:85ch;margin:0 0 8px}
 .tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);font-size:13px;padding:6px 9px;border-radius:8px;opacity:0;transition:opacity .12s;z-index:30;max-width:240px}
@@ -271,7 +271,7 @@ footer p{max-width:85ch;margin:0 0 8px}
         <div class="stats">
           <div><b>33</b><span>districts covered</span></div>
           <div><b>Up to 7 days</b><span>of warning</span></div>
-          <div><b>6 monsoons</b><span>checked against what really happened</span></div>
+          <div><b>6 monsoons</b><span>tested against real floods</span></div>
         </div>
       </div>
       <div class="outlook" id="outlook" aria-live="polite"></div>
@@ -288,7 +288,7 @@ footer p{max-width:85ch;margin:0 0 8px}
         <div class="card feature"><div class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 17l5-5 4 4 8-8"/><path d="M14 8h6v6"/></svg></div>
           <h3>Watches water on its way</h3><p>Rain over Arunachal and water passing Dibrugarh reach Guwahati days later. FloodWatch learned from 24 years of past floods how fast that water travels, so it can warn districts downstream before it arrives.</p><a href="#live">See today's forecast</a></div>
         <div class="card feature"><div class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M17 4.5a3.5 3.5 0 0 1 0 7M21.5 20c-.5-2.4-1.8-4.1-3.6-4.9"/></svg></div>
-          <h3>Thinks about people, not just rivers</h3><p>Much of Assam's flood damage happens even when the big river looks fine, from local rain and small streams. So FloodWatch also learns from the state's own reports of where people were actually affected.</p><a href="#track">See how well it works</a></div>
+          <h3>Thinks about people, not just rivers</h3><p>Much of Assam's flood damage happens even when the big river looks fine, from local rain and small streams. So FloodWatch also learns from the Assam State Disaster Management Authority's reports of where people were actually affected.</p><a href="#track">See how well it works</a></div>
         <div class="card feature"><div class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
           <h3>Keeps itself honest</h3><p>We replayed every monsoon from 2021 to 2026 as if it were happening live, then compared each warning with what actually happened. You can replay any day yourself.</p><a href="#check">Check a past date</a></div>
       </div>
@@ -336,7 +336,7 @@ footer p{max-width:85ch;margin:0 0 8px}
     <div class="page-head"><div><h1>Check any past date, 2021–2026</h1><p>Go back to any morning and see what FloodWatch said, then what actually happened next.</p></div></div>
     <div class="howto">
       <div><span class="k" style="background:var(--r3)"></span><span><b>Darker district</b> = FloodWatch thought a flood was more likely that morning.</span></div>
-      <div><span class="k" style="border:2px dashed var(--bad)"></span><span><b>Red dashed outline</b> = 1,000 or more people really were affected there that month.</span></div>
+      <div><span class="k" style="border:2px dashed var(--bad)"></span><span><b>Red dashed outline</b> = 1,000 or more people really were affected there that month, according to the Assam State Disaster Management Authority (ASDMA).</span></div>
       <div><span class="k" style="background:var(--brand);color:#fff;font-size:12px">▶</span><span><b>Press play</b> to watch a whole monsoon, or click any district for details.</span></div>
     </div>
     <div class="replay">
@@ -371,7 +371,7 @@ footer p{max-width:85ch;margin:0 0 8px}
     <div class="page-head"><div><h1>How well it works</h1><p>FloodWatch learned from floods between 1997 and 2020. We then replayed every day from 2021 to 2026 as if it were live, without letting it see the future, and compared each warning with what really happened.</p></div></div>
     <div class="grid3" id="proof2"></div>
     <h2 class="details-h">The details</h2>
-    <p class="muted" style="margin:0 0 16px;max-width:75ch">For readers who want the numbers. The score used is the critical success index (CSI): correct warnings ÷ (correct warnings + missed floods + false alarms). 1 is perfect, 0 is useless.</p>
+    <p class="muted" style="margin:0 0 16px;max-width:75ch">For readers who want the numbers. "ASDMA" is the Assam State Disaster Management Authority, whose reports of people affected are the ground truth here. The score used is the critical success index (CSI): correct warnings ÷ (correct warnings + missed floods + false alarms). 1 is perfect, 0 is useless.</p>
     <div class="cols">
       <div class="card"><h3>River flooding, by forecast lead time</h3><p class="sub">12 river stations, 2021–2026, against assuming tomorrow looks like today.</p>
         <svg id="skill" viewBox="0 0 520 300" role="img" aria-label="Forecast skill by lead time"></svg><p class="note" id="events"></p></div>
@@ -420,7 +420,7 @@ footer p{max-width:85ch;margin:0 0 8px}
   <div class="wrap">
     <div class="footlinks"><a href="#method">How it works (technical)</a><a href="#satellite">Satellite flood maps</a><a href="https://github.com/samiyakazi23/floodwatch">Code on GitHub</a></div>
     <p><b>Data:</b> river discharge from GloFAS v4 via Open-Meteo · rainfall from NASA POWER, with the latest days from Open-Meteo · flood reports from ASDMA's daily FRIMS bulletins, compiled by CivicDataLab's IDS-DRR project · radar scenes and labels from Sen1Floods11 (Bonafilia et al., 2020) · district boundaries from Census 2011 shapefiles.</p>
-    <p>A research project by Samiya Kazi · <a href="https://github.com/samiyakazi23/floodwatch">code on GitHub</a>. For official flood warnings, follow ASDMA and the Central Water Commission.</p>
+    <p>A research project by Samiya Kazi · <a href="https://github.com/samiyakazi23/floodwatch">code on GitHub</a>. For official flood warnings, follow the Assam State Disaster Management Authority (ASDMA) and the Central Water Commission.</p>
   </div>
 </footer>
 <div class="tip" id="tip" role="tooltip"></div>
@@ -488,7 +488,7 @@ const ICON={ok:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stro
     <div class="mini">${mini}</div>
     <div class="foot"><span>Updated ${prettyDate(live.issued)} · new forecast every morning at 7:10 AM</span><a href="#live">See all districts</a></div>`;
   const m=+live.issued.slice(5,7), dry=m<5||m>10;
-  $("#advisory").innerHTML=`${ICON.warn}<div><b>${dry?"Dry season: Assam's rivers are low":"Monsoon season: check daily"}</b><p>${dry?"Flood season usually begins in May. The live forecast keeps running every morning so it is ready, and so every forecast is on record before the 2027 monsoon.":"Rivers can rise within days during the monsoon."} FloodWatch is a research project: for official warnings, follow ASDMA and the Central Water Commission.</p></div>`;
+  $("#advisory").innerHTML=`${ICON.warn}<div><b>${dry?"Dry season: Assam's rivers are low":"Monsoon season: check daily"}</b><p>${dry?"Flood season usually begins in May. The live forecast keeps running every morning so it is ready, and so every forecast is on record before the 2027 monsoon.":"Rivers can rise within days during the monsoon."} FloodWatch is a research project: for official warnings, follow the Assam State Disaster Management Authority (ASDMA) and the Central Water Commission.</p></div>`;
   const F=summary.forecast, Y=summary.impact_loyo, D=summary.daily_2022;
   const proof=`
     <div class="card proof"><b>${inTen(F[1].hit_rate)}</b><span>river floods spotted a day ahead</span><p>Only about ${inTen(F[1].false_alarm_ratio)} warnings turned out to be false alarms. Three days ahead it still spotted ${inTen(F[3].hit_rate)}.</p></div>
@@ -528,7 +528,7 @@ let trendStation="Guwahati";
      .attr("fill",f=>tcol(rk({p:st[f.properties.station].p["3"],c:st[f.properties.station].cut["3"]})))
      .on("mousemove",(e,f)=>{const v=st[f.properties.station];tip(e,`<b>${f.properties.name}</b><br>${v.p["3"]>=v.cut["3"]?"Flood warning":"No warning"} · ${f.properties.station} gauge`)})
      .on("mouseleave",()=>tip());}
-  $("#today-sum").innerHTML=atRisk.length?`<b>${atRisk.length} district${atRisk.length>1?"s have":" has"} a flood warning.</b> Follow ASDMA's official advice.`:`<b>No district has a flood warning for the next 3 days.</b>`;
+  $("#today-sum").innerHTML=atRisk.length?`<b>${atRisk.length} district${atRisk.length>1?"s have":" has"} a flood warning.</b> Follow the official advice of the Assam State Disaster Management Authority (ASDMA).`:`<b>No district has a flood warning for the next 3 days.</b>`;
   $("#risk").innerHTML=atRisk.length?atRisk.map(d=>`<div class="risk-row"><div><b>${d.n}</b><div class="note">${d.st} gauge</div></div><span class="chip c-warn">Flood warning</span></div>`).join("")
     :`<p class="note">All districts are pale today because the rivers are low. During the monsoon, districts darken as the chance of flooding rises.</p>`;
   // log
