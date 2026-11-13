@@ -83,8 +83,8 @@ h1,h2,h3{font-family:"Bricolage Grotesque",sans-serif;margin:0;line-height:1.12}
 .outlook h2{font-size:21px;font-weight:600;margin:2px 0 4px}
 .outlook p{margin:0;font-size:15px;color:var(--ink-2)}
 .mini{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.mini div{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:color-mix(in srgb,var(--ok-bg) 45%,var(--surface))}
-.mini div.w{background:color-mix(in srgb,var(--warn-bg) 60%,var(--surface))} .mini div.b{background:color-mix(in srgb,var(--bad-bg) 60%,var(--surface))}
+.mini>div{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:color-mix(in srgb,var(--ok-bg) 45%,var(--surface))}
+.mini>div.w{background:color-mix(in srgb,var(--warn-bg) 60%,var(--surface))} .mini>div.b{background:color-mix(in srgb,var(--bad-bg) 60%,var(--surface))}
 .mini span.n{font-size:13px;color:var(--ink-2)}
 .mini b{display:block;font:800 24px "Bricolage Grotesque";margin:2px 0 6px}
 .mini b small{font:400 13px "IBM Plex Sans";color:var(--ink-2)}
@@ -213,6 +213,25 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 .steps p{margin:6px 0 0;font-size:15px;color:var(--ink-2)}
 .limits{margin:0;padding-left:20px;color:var(--ink-2)}
 .limits li{margin:6px 0}
+/* plain-language additions */
+.near{margin-top:6px}
+.near .lbl{font-size:13px;color:var(--ink-2)}
+.meter{height:7px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:5px}
+.meter i{display:block;height:100%;border-radius:4px;background:var(--ok)}
+.meter.w i{background:var(--warn)} .meter.b i{background:var(--bad)}
+.howto{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:16px}
+@media (max-width:760px){.howto{grid-template-columns:1fr}}
+.howto div{display:flex;gap:10px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;color:var(--ink-2)}
+.howto b{color:var(--ink)}
+.howto .k{flex:none;width:26px;height:26px;border-radius:7px;display:grid;place-items:center}
+.why{font-size:13px;color:var(--ink-2);background:var(--brand-50);border-radius:10px;padding:10px 12px;margin:10px 0 0}
+.sec-title{font-size:20px;font-weight:600;margin:26px 0 12px}
+#todaymap{width:100%;height:auto;display:block}
+#todaymap .d{stroke:var(--surface);stroke-width:.8}
+.today-sum{font-size:16px;margin:0 0 6px}
+.details-h{margin:34px 0 4px;font-size:22px;font-weight:800}
+.footlinks{display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:14px}
+.footlinks a{font-weight:600;text-decoration:none}
 footer{margin-top:80px;background:var(--brand-900);color:#cfe3de;padding:36px 0 44px;font-size:14px}
 footer a{color:#fff}
 footer p{max-width:85ch;margin:0 0 8px}
@@ -227,7 +246,7 @@ footer p{max-width:85ch;margin:0 0 8px}
       FloodWatch Assam
     </a>
     <nav class="links" aria-label="Pages">
-      <a href="#home">Home</a><a href="#live">Live dashboard</a><a href="#check">Check a date</a><a href="#track">Track record</a><a href="#satellite">Satellite</a><a href="#method">Method</a>
+      <a href="#home">Home</a><a href="#live">Today's forecast</a><a href="#check">Check a past date</a><a href="#track">How well it works</a>
     </nav>
     <a class="btn code" href="https://github.com/samiyakazi23/floodwatch">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.88.87 2.34.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.66 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 8 0Z"/></svg>
@@ -244,15 +263,15 @@ footer p{max-width:85ch;margin:0 0 8px}
       <div>
         <span class="pill"><b aria-hidden="true"></b>Live flood outlook for Assam</span>
         <h1>Know when the Brahmaputra will rise.</h1>
-        <p class="lede">FloodWatch reads river flow and rainfall across the Brahmaputra basin every morning and forecasts flooding up to seven days ahead for all 33 districts. Its forecasts are tested against six real monsoons.</p>
+        <p class="lede">Every morning FloodWatch looks at Assam's rivers and the rain falling upstream, and says which districts could flood in the coming week. We tested it on every monsoon since 2021 to see how often it got things right.</p>
         <div class="ctas">
           <a class="btn btn-white" href="#live"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/></svg>Today's forecast</a>
           <a class="btn btn-ghost" href="#check"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Check a past date</a>
         </div>
         <div class="stats">
-          <div><b>12</b><span>river stations read daily</span></div>
-          <div><b>1–7 days</b><span>forecast lead time</span></div>
-          <div><b>6 monsoons</b><span>tested, 2021–2026</span></div>
+          <div><b>33</b><span>districts covered</span></div>
+          <div><b>Up to 7 days</b><span>of warning</span></div>
+          <div><b>6 monsoons</b><span>checked against what really happened</span></div>
         </div>
       </div>
       <div class="outlook" id="outlook" aria-live="polite"></div>
@@ -264,21 +283,21 @@ footer p{max-width:85ch;margin:0 0 8px}
 
   <section class="band">
     <div class="wrap">
-      <div class="center"><h2>Three ways FloodWatch watches the floods</h2><p>River forecasts, impact forecasts and satellite maps, each tested on data it never trained on.</p></div>
+      <div class="center"><h2>What FloodWatch does</h2><p>Three simple ideas behind the forecast.</p></div>
       <div class="grid3">
         <div class="card feature"><div class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 17l5-5 4 4 8-8"/><path d="M14 8h6v6"/></svg></div>
-          <h3>Forecast the rivers</h3><p>Rain over Arunachal and water passing Dibrugarh reach Guwahati days later. A model trained on 24 years of river flow and rainfall learns how surges travel and warns 1–7 days ahead.</p><a href="#live">See today's rivers</a></div>
+          <h3>Watches water on its way</h3><p>Rain over Arunachal and water passing Dibrugarh reach Guwahati days later. FloodWatch learned from 24 years of past floods how fast that water travels, so it can warn districts downstream before it arrives.</p><a href="#live">See today's forecast</a></div>
         <div class="card feature"><div class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M17 4.5a3.5 3.5 0 0 1 0 7M21.5 20c-.5-2.4-1.8-4.1-3.6-4.9"/></svg></div>
-          <h3>Predict who gets affected</h3><p>Half of Assam's flood damage happens when the main river looks fine. A second model learns from ASDMA's district reports where people are actually hit.</p><a href="#track">See the track record</a></div>
-        <div class="card feature"><div class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 14l6-6 4 4 6-6"/><rect x="2" y="16" width="20" height="5" rx="1.5"/><path d="M14 3l2 2M18 7l2 2"/></svg></div>
-          <h3>Map the water from space</h3><p>Radar satellites see through monsoon cloud. A U-Net outlines floodwater on Sentinel-1 images, matching experts' maps for 72% of the water in Assam scenes.</p><a href="#satellite">See satellite maps</a></div>
+          <h3>Thinks about people, not just rivers</h3><p>Much of Assam's flood damage happens even when the big river looks fine, from local rain and small streams. So FloodWatch also learns from the state's own reports of where people were actually affected.</p><a href="#track">See how well it works</a></div>
+        <div class="card feature"><div class="fi"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <h3>Keeps itself honest</h3><p>We replayed every monsoon from 2021 to 2026 as if it were happening live, then compared each warning with what actually happened. You can replay any day yourself.</p><a href="#check">Check a past date</a></div>
       </div>
     </div>
   </section>
 
   <section class="band">
     <div class="wrap">
-      <div class="center"><h2>Tested on six real monsoons</h2><p>Every year from 2021 to 2026 was forecast using only the years before it.</p></div>
+      <div class="center"><h2>How often was it right?</h2><p>Each monsoon from 2021 to 2026 was forecast using only what was known before it, then checked against what happened.</p></div>
       <div class="grid3" id="proof"></div>
     </div>
   </section>
@@ -288,26 +307,25 @@ footer p{max-width:85ch;margin:0 0 8px}
 <div class="page" id="p-live">
   <div class="wrap">
     <div class="page-head">
-      <div><h1>Live dashboard</h1><p id="live-sub"></p></div>
+      <div><h1>Today's forecast</h1><p id="live-sub"></p></div>
       <a class="btn btn-white" style="border-color:var(--line)" href="#check">Check a past date</a>
     </div>
-    <div class="stations" id="stations"></div>
     <div class="dash2">
-      <div class="card">
-        <div class="chart-head">
-          <div><h3>River flow, last 45 days</h3><p class="sub" id="trend-sub"></p></div>
-          <div class="tabs" role="tablist" id="trend-tabs"></div>
-        </div>
-        <svg id="trend" viewBox="0 0 640 300" role="img" aria-label="River flow over the last 45 days against the warning level"></svg>
-      </div>
-      <div class="card">
-        <h3>System status</h3><p class="sub">Data, models and the daily run</p>
-        <ul class="status-list" id="status"></ul>
-      </div>
+      <div class="card"><h3>Could your district flood in the next 3 days?</h3><p class="sub" id="risk-sub"></p>
+        <p class="today-sum" id="today-sum"></p>
+        <svg id="todaymap" viewBox="0 0 900 460" role="img" aria-label="Map of Assam districts coloured by today's 3-day flood forecast"></svg>
+        <div class="legend"><span class="ramp" aria-hidden="true">Lower chance <i style="background:var(--r0)"></i><i style="background:var(--r1)"></i><i style="background:var(--r2)"></i><i style="background:var(--r3)"></i><i style="background:var(--r4)"></i> warning</span></div>
+        <div id="risk"></div></div>
+      <div class="card"><h3>Forecast diary</h3><p class="sub">Each morning's forecast is saved before anything happens, so it can be checked honestly after the 2027 monsoon.</p><div class="tablewrap"><table id="log"></table></div></div>
     </div>
-    <div class="dash3">
-      <div class="card"><h3>Districts at risk</h3><p class="sub" id="risk-sub"></p><div id="risk"></div></div>
-      <div class="card"><h3>Forecast log</h3><p class="sub">Every forecast is saved before the event, to be scored after the 2027 monsoon.</p><div class="tablewrap"><table id="log"></table></div></div>
+    <h2 class="sec-title">The rivers right now</h2>
+    <div class="stations" id="stations"></div>
+    <div class="card">
+      <div class="chart-head">
+        <div><h3>Is the river rising? The last 45 days</h3><p class="sub" id="trend-sub"></p></div>
+        <div class="tabs" role="tablist" id="trend-tabs"></div>
+      </div>
+      <svg id="trend" viewBox="0 0 1000 300" role="img" aria-label="River flow over the last 45 days against the flood level"></svg>
     </div>
   </div>
 </div>
@@ -315,14 +333,19 @@ footer p{max-width:85ch;margin:0 0 8px}
 <!-- ================= CHECK A DATE ================= -->
 <div class="page" id="p-check">
   <div class="wrap">
-    <div class="page-head"><div><h1>Check any date, 2021–2026</h1><p>Pick a day or play a whole monsoon. Each district shows the chance of flooding the model gave that morning, and what actually happened next.</p></div></div>
+    <div class="page-head"><div><h1>Check any past date, 2021–2026</h1><p>Go back to any morning and see what FloodWatch said, then what actually happened next.</p></div></div>
+    <div class="howto">
+      <div><span class="k" style="background:var(--r3)"></span><span><b>Darker district</b> = FloodWatch thought a flood was more likely that morning.</span></div>
+      <div><span class="k" style="border:2px dashed var(--bad)"></span><span><b>Red dashed outline</b> = 1,000 or more people really were affected there that month.</span></div>
+      <div><span class="k" style="background:var(--brand);color:#fff;font-size:12px">▶</span><span><b>Press play</b> to watch a whole monsoon, or click any district for details.</span></div>
+    </div>
     <div class="replay">
       <div class="card">
         <div class="controls">
           <div class="years" role="group" aria-label="Year" id="years"></div>
           <div style="display:flex;flex-wrap:wrap;gap:10px 16px">
             <label class="ctl">Date <input type="date" id="pick"></label>
-            <label class="ctl">Forecast <select id="lead"><option value="1">1 day ahead</option><option value="2">2 days ahead</option><option value="3" selected>3 days ahead</option><option value="5">5 days ahead</option><option value="7">7 days ahead</option></select></label>
+            <label class="ctl">Warning time <select id="lead"><option value="1">1 day ahead</option><option value="2">2 days ahead</option><option value="3" selected>3 days ahead</option><option value="5">5 days ahead</option><option value="7">7 days ahead</option></select></label>
           </div>
         </div>
         <svg id="map" viewBox="0 0 900 460" role="img" aria-label="Map of Assam districts coloured by forecast flood chance"></svg>
@@ -332,7 +355,7 @@ footer p{max-width:85ch;margin:0 0 8px}
           <div class="date" id="date" aria-live="polite">—</div>
         </div>
         <div class="legend">
-          <span class="ramp" aria-hidden="true">Chance of flooding <i style="background:var(--r0)"></i><i style="background:var(--r1)"></i><i style="background:var(--r2)"></i><i style="background:var(--r3)"></i><i style="background:var(--r4)"></i></span>
+          <span class="ramp" aria-hidden="true">Chance of flooding: low <i style="background:var(--r0)"></i><i style="background:var(--r1)"></i><i style="background:var(--r2)"></i><i style="background:var(--r3)"></i><i style="background:var(--r4)"></i> high</span>
           <span><span class="swatch-rep" aria-hidden="true"></span>ASDMA reported 1,000+ people affected that month</span>
         </div>
         <div class="check" id="checkbox" aria-live="polite"></div>
@@ -345,7 +368,10 @@ footer p{max-width:85ch;margin:0 0 8px}
 <!-- ================= TRACK RECORD ================= -->
 <div class="page" id="p-track">
   <div class="wrap">
-    <div class="page-head"><div><h1>Track record</h1><p>The model reads river flow and rainfall. It learned from 1997–2020, then ran day by day through 2021–2026. The score is the critical success index (CSI): hits ÷ (hits + misses + false alarms). 1 is perfect.</p></div></div>
+    <div class="page-head"><div><h1>How well it works</h1><p>FloodWatch learned from floods between 1997 and 2020. We then replayed every day from 2021 to 2026 as if it were live, without letting it see the future, and compared each warning with what really happened.</p></div></div>
+    <div class="grid3" id="proof2"></div>
+    <h2 class="details-h">The details</h2>
+    <p class="muted" style="margin:0 0 16px;max-width:75ch">For readers who want the numbers. The score used is the critical success index (CSI): correct warnings ÷ (correct warnings + missed floods + false alarms). 1 is perfect, 0 is useless.</p>
     <div class="cols">
       <div class="card"><h3>River flooding, by forecast lead time</h3><p class="sub">12 river stations, 2021–2026, against assuming tomorrow looks like today.</p>
         <svg id="skill" viewBox="0 0 520 300" role="img" aria-label="Forecast skill by lead time"></svg><p class="note" id="events"></p></div>
@@ -379,6 +405,7 @@ footer p{max-width:85ch;margin:0 0 8px}
       <li class="card"><h3>Predict impact, not just water</h3><p>River forecasts plus each district's flood history from other years give the chance that ASDMA reports 1,000+ people affected that month.</p></li>
       <li class="card"><h3>See the water from space</h3><p>A U-Net maps floodwater on Sentinel-1 radar, so forecasts can be checked against where water actually spread.</p></li>
     </ol>
+    <div class="card" style="margin-top:18px"><h3>System status</h3><p class="sub">Data, models and the daily run</p><ul class="status-list" id="status"></ul></div>
     <div class="cols" style="margin-top:18px">
       <div class="card"><h3>Built to avoid fooling itself</h3>
         <ul class="limits"><li>Flood levels and alert cut-offs come from training years only.</li><li>A day's inputs are identical whether or not later days exist; automated tests check this on every change.</li><li>Each test year is forecast with a model that has never seen it.</li><li>Live forecasts are logged before events and scored afterwards.</li></ul></div>
@@ -391,6 +418,7 @@ footer p{max-width:85ch;margin:0 0 8px}
 
 <footer>
   <div class="wrap">
+    <div class="footlinks"><a href="#method">How it works (technical)</a><a href="#satellite">Satellite flood maps</a><a href="https://github.com/samiyakazi23/floodwatch">Code on GitHub</a></div>
     <p><b>Data:</b> river discharge from GloFAS v4 via Open-Meteo · rainfall from NASA POWER, with the latest days from Open-Meteo · flood reports from ASDMA's daily FRIMS bulletins, compiled by CivicDataLab's IDS-DRR project · radar scenes and labels from Sen1Floods11 (Bonafilia et al., 2020) · district boundaries from Census 2011 shapefiles.</p>
     <p>A research project by Samiya Kazi · <a href="https://github.com/samiyakazi23/floodwatch">code on GitHub</a>. For official flood warnings, follow ASDMA and the Central Water Commission.</p>
   </div>
@@ -406,6 +434,15 @@ const fmt=n=>Math.round(n).toLocaleString("en-IN");
 const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const prettyDate=s=>{const [y,m,d]=s.split("-");return `${+d} ${MONTHS[+m-1]} ${y}`};
 const pct=x=>Math.round(x*100)+"%";
+const inTen=x=>Math.round(x*10)+" in 10";
+function nearness(r){ // how close a river is to its flood (warning) level, in words
+  if(r>=1)return {t:"Above flood level",k:"b"};
+  if(r>=.85)return {t:"Very close to flood level",k:"w"};
+  if(r>=.6)return {t:"Getting closer to flood level",k:"w"};
+  if(r>=.3)return {t:"Below flood level",k:""};
+  return {t:"Far below flood level",k:""};
+}
+const meter=r=>{const n=nearness(r);return `<div class="near"><span class="lbl">${n.t}</span><div class="meter ${n.k}"><i style="width:${Math.min(100,Math.max(3,r*100))}%"></i></div></div>`};
 
 const [geo,stations,daily,impacts,summary,scenes]=await Promise.all(
   ["districts","stations","daily","impacts","summary","scenes"].map(n=>fetch(`data/${n}.json`).then(r=>r.json())));
@@ -443,31 +480,32 @@ const ICON={ok:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stro
   const st=live.stations, warned=ALL.filter(s=>st[s].p["3"]>=st[s].cut["3"]), above=ALL.filter(s=>st[s].q>=st[s].thr);
   const level=above.length?"bad":warned.length?"warn":"ok";
   const head=level==="ok"?"No flood expected in the next 3 days":`${warned.length||above.length} of 12 river stations under flood warning`;
-  const body=level==="ok"?"All 12 river stations are below their warning levels, and none is forecast to reach them in the next three days.":`Warnings at ${(warned.length?warned:above).join(", ")}. Follow ASDMA's advisories.`;
+  const body=level==="ok"?"Assam's main rivers are below flood level, and none is expected to reach it in the next three days.":`Warnings at ${(warned.length?warned:above).join(", ")}. Follow ASDMA's advisories.`;
   const mini=["Dibrugarh","Guwahati","Dhubri","Silchar"].map(n=>{const s=st[n],x=stationState(s);
-    return `<div class="${x.k}"><span class="n">${n} · ${s.river}</span><b>${fmt(s.q)} <small>m³/s</small></b><span class="chip ${x.chip}">${x.t}</span> <span class="n">${pct(s.q/s.thr)} of warning</span></div>`}).join("");
+    return `<div class="${x.k}" title="${fmt(s.q)} cubic metres of water per second"><span class="n">${n} · ${s.river}</span><b style="font-size:19px">${x.t}</b>${meter(s.q/s.thr)}</div>`}).join("");
   const o=$("#outlook");o.classList.add(level==="ok"?"ok":level);
   o.innerHTML=`<div class="head"><div class="ico">${level==="ok"?ICON.ok:ICON.warn}</div><div><small>Today's flood outlook</small><h2>${head}</h2><p>${body}</p></div></div>
     <div class="mini">${mini}</div>
-    <div class="foot"><span>Forecast issued ${prettyDate(live.issued)} · updates daily at 7:10 AM IST</span><a href="#live">Full dashboard</a></div>`;
+    <div class="foot"><span>Updated ${prettyDate(live.issued)} · new forecast every morning at 7:10 AM</span><a href="#live">See all districts</a></div>`;
   const m=+live.issued.slice(5,7), dry=m<5||m>10;
   $("#advisory").innerHTML=`${ICON.warn}<div><b>${dry?"Dry season: Assam's rivers are low":"Monsoon season: check daily"}</b><p>${dry?"Flood season usually begins in May. The live forecast keeps running every morning so it is ready, and so every forecast is on record before the 2027 monsoon.":"Rivers can rise within days during the monsoon."} FloodWatch is a research project: for official warnings, follow ASDMA and the Central Water Commission.</p></div>`;
-  const F=summary.forecast, Y=summary.impact_loyo, G=summary.segmentation;
-  $("#proof").innerHTML=`
-    <div class="card proof"><b>${pct(F[1].hit_rate)}</b><span>of river flood days caught a day ahead</span><p>With ${pct(F[1].false_alarm_ratio)} false alarms. Three days ahead: ${pct(F[3].hit_rate)} caught.</p></div>
-    <div class="card proof"><b>${Y.impact_model.csi.toFixed(2)}</b><span>score against ASDMA's district reports</span><p>Versus ${Y.climatology_jun_jul.csi.toFixed(2)} for flagging every June and July and ${Y.river_forecast_only.csi.toFixed(2)} for river forecasts alone.</p></div>
-    <div class="card proof"><b>${G.unet.water_iou.toFixed(2)}</b><span>water overlap with experts' satellite maps</span><p>Versus ${G.otsu_baseline.water_iou.toFixed(2)} for the brightness threshold agencies use. ${Math.round(G.unet.accuracy*100)}% of pixels correct.</p></div>`;
+  const F=summary.forecast, Y=summary.impact_loyo, D=summary.daily_2022;
+  const proof=`
+    <div class="card proof"><b>${inTen(F[1].hit_rate)}</b><span>river floods spotted a day ahead</span><p>Only about ${inTen(F[1].false_alarm_ratio)} warnings turned out to be false alarms. Three days ahead it still spotted ${inTen(F[3].hit_rate)}.</p></div>
+    <div class="card proof"><b>${inTen(D.river_plus_rain.warned_3d_before)}</b><span>district floods in 2022 warned 3 days early</span><p>With almost no false alarms on quiet days. Without the rainfall data, it was only ${inTen(D.river_only.warned_3d_before)}.</p></div>
+    <div class="card proof"><b>${inTen(Y.impact_model.hit_rate)}</b><span>months when people were hit, flagged in advance</span><p>About ${inTen(Y.impact_model.false_alarm_ratio)} of its alerts were false alarms, fewer than simply flagging every June and July (${inTen(Y.climatology_jun_jul.false_alarm_ratio)}).</p></div>`;
+  $("#proof").innerHTML=proof; $("#proof2").innerHTML=proof;
 })();
 
 /* ---------- LIVE DASHBOARD ---------- */
 let trendStation="Guwahati";
 (function(){
   if(!live)return;
-  $("#live-sub").innerHTML=`<span class="dot" aria-hidden="true"></span>Forecast issued ${prettyDate(live.issued)} from that morning's river data · updates daily at 7:10 AM IST`;
+  $("#live-sub").innerHTML=`<span class="dot" aria-hidden="true"></span>Updated ${prettyDate(live.issued)} · a new forecast is made every morning at 7:10 AM`;
   const st=live.stations;
   $("#stations").innerHTML=ALL.map(n=>{const s=st[n],x=stationState(s);
-    return `<button class="st-card ${x.k}" data-st="${n}" aria-pressed="${n===trendStation}"><div class="t"><span>${n}</span><span class="chip ${x.chip}">${x.t}</span></div>
-      <div class="r">${s.river}</div><b>${fmt(s.q)} <small>m³/s</small></b><div class="pct">${pct(s.q/s.thr)} of warning · ${pct(s.p["3"])} chance in 3 days</div></button>`}).join("");
+    return `<button class="st-card ${x.k}" data-st="${n}" aria-pressed="${n===trendStation}" title="${fmt(s.q)} cubic metres of water per second · click to see the last 45 days"><div class="t"><span>${n}</span><span class="chip ${x.chip}">${x.t}</span></div>
+      <div class="r">${s.river} river</div>${meter(s.q/s.thr)}</button>`}).join("");
   document.querySelectorAll(".st-card").forEach(b=>b.addEventListener("click",()=>{trendStation=b.dataset.st;syncTrend()}));
   $("#trend-tabs").innerHTML=MAIN.concat(["Silchar"]).map(n=>`<button role="tab" data-st="${n}">${n}</button>`).join("");
   document.querySelectorAll("#trend-tabs button").forEach(b=>b.addEventListener("click",()=>{trendStation=b.dataset.st;syncTrend()}));
@@ -482,25 +520,32 @@ let trendStation="Guwahati";
   // districts at risk
   const dist=geo.features.map(f=>({n:f.properties.name,st:f.properties.station,p:st[f.properties.station].p["3"],c:st[f.properties.station].cut["3"]})).sort((a,b)=>b.p-a.p);
   const atRisk=dist.filter(d=>d.p>=d.c);
-  $("#risk-sub").textContent=`3-day forecast for all 33 districts, by their river station`;
-  $("#risk").innerHTML=atRisk.length?atRisk.map(d=>`<div class="risk-row"><div><b>${d.n}</b><div class="note">${d.st} gauge</div></div><div style="display:flex;align-items:center;gap:10px"><span class="bar"><i style="width:${pct(d.p)}"></i></span><b>${pct(d.p)}</b></div></div>`).join("")
-    :`<div class="empty-state">${ICON.ok}No district is above its alert level for the next 3 days.</div>
-      <p class="note">Highest today: ${dist[0].n} at ${pct(dist[0].p)} (alert at ${pct(dist[0].c)}).</p>`;
+  $("#risk-sub").textContent=`All 33 districts. Each is linked to the river gauge nearest to it.`;
+  {const tp=d3.geoMercator().fitExtent([[10,10],[890,450]],geo), tpath=d3.geoPath(tp), tsv=d3.select("#todaymap");
+   const rk=d=>d.p>=d.c?.6+.4*Math.min(1,(d.p-d.c)/Math.max(1e-6,1-d.c)):.6*d.p/Math.max(d.c,1e-6);
+   const tcol=t=>d3.scaleThreshold().domain([.2,.4,.6,.8]).range(["--r0","--r1","--r2","--r3","--r4"].map(css))(t);
+   tsv.append("g").selectAll("path").data(geo.features).join("path").attr("class","d").attr("d",tpath)
+     .attr("fill",f=>tcol(rk({p:st[f.properties.station].p["3"],c:st[f.properties.station].cut["3"]})))
+     .on("mousemove",(e,f)=>{const v=st[f.properties.station];tip(e,`<b>${f.properties.name}</b><br>${v.p["3"]>=v.cut["3"]?"Flood warning":"No warning"} · ${f.properties.station} gauge`)})
+     .on("mouseleave",()=>tip());}
+  $("#today-sum").innerHTML=atRisk.length?`<b>${atRisk.length} district${atRisk.length>1?"s have":" has"} a flood warning.</b> Follow ASDMA's official advice.`:`<b>No district has a flood warning for the next 3 days.</b>`;
+  $("#risk").innerHTML=atRisk.length?atRisk.map(d=>`<div class="risk-row"><div><b>${d.n}</b><div class="note">${d.st} gauge</div></div><span class="chip c-warn">Flood warning</span></div>`).join("")
+    :`<p class="note">All districts are pale today because the rivers are low. During the monsoon, districts darken as the chance of flooding rises.</p>`;
   // log
   const rows=log.slice(-8).reverse();
-  $("#log").innerHTML=`<thead><tr><th>Issued</th><th>Stations warned (3-day)</th><th class="n">Highest chance</th></tr></thead><tbody>`+
+  $("#log").innerHTML=`<thead><tr><th>Morning of</th><th>Rivers with a warning</th></tr></thead><tbody>`+
     (rows.length?rows.map(r=>{const w=Object.entries(r.stations).filter(([n,v])=>v.p["3"]>=live.stations[n].cut["3"]).map(([n])=>n);
       const mx=Math.max(...Object.values(r.stations).map(v=>v.p["3"]));
-      return `<tr><td>${prettyDate(r.issued)}</td><td>${w.length?w.join(", "):'<span class="muted">None</span>'}</td><td class="n">${pct(mx)}</td></tr>`}).join("")
-    :`<tr><td colspan="3" class="muted">The first forecast is logged tomorrow morning.</td></tr>`)+"</tbody>";
+      return `<tr><td>${prettyDate(r.issued)}</td><td>${w.length?w.join(", "):'<span class="muted">None</span>'}</td></tr>`}).join("")
+    :`<tr><td colspan="2" class="muted">The first forecast is logged tomorrow morning.</td></tr>`)+"</tbody>";
 })();
 function syncTrend(){document.querySelectorAll(".st-card").forEach(b=>b.setAttribute("aria-pressed",b.dataset.st===trendStation));
   document.querySelectorAll("#trend-tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.st===trendStation));drawTrend()}
 function drawTrend(){
   if(!live)return; const s=live.stations[trendStation]; const h=s.history; const svg=d3.select("#trend"); svg.selectAll("*").remove();
   document.querySelectorAll("#trend-tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.st===trendStation));
-  $("#trend-sub").textContent=`${trendStation} on the ${s.river} · warning level ${fmt(s.thr)} m³/s`;
-  const W=640,H=300,m={l:58,r:16,t:16,b:30};
+  $("#trend-sub").textContent=`${trendStation} on the ${s.river}. The line is the amount of water flowing past (cubic metres per second); the red dashed line is the flood level.`;
+  const W=1000,H=300,m={l:58,r:16,t:16,b:30};
   const dates=h.date.map(d=>new Date(d+"T00:00:00"));
   const x=d3.scaleTime().domain(d3.extent(dates)).range([m.l,W-m.r]);
   const y=d3.scaleLinear().domain([0,Math.max(d3.max(h.q),s.thr)*1.1]).nice().range([H-m.b,m.t]);
@@ -511,7 +556,7 @@ function drawTrend(){
   svg.append("path").attr("d",d3.area().x((d,i)=>x(dates[i])).y0(H-m.b).y1(d=>y(d))(h.q)).attr("fill",css("--brand-50"));
   svg.append("path").attr("d",d3.line().x((d,i)=>x(dates[i])).y(d=>y(d))(h.q)).attr("fill","none").attr("stroke",css("--brand")).attr("stroke-width",2.4);
   svg.append("line").attr("x1",m.l).attr("x2",W-m.r).attr("y1",y(s.thr)).attr("y2",y(s.thr)).attr("stroke",css("--bad")).attr("stroke-dasharray","6 5").attr("stroke-width",1.5);
-  svg.append("text").attr("class","ax").attr("x",W-m.r).attr("y",y(s.thr)-6).attr("text-anchor","end").attr("fill",css("--bad")).text("Warning level");
+  svg.append("text").attr("class","ax").attr("x",W-m.r).attr("y",y(s.thr)-6).attr("text-anchor","end").attr("fill",css("--bad")).text("Flood level");
   const lx=x(dates[dates.length-1]),ly=y(h.q[h.q.length-1]);
   svg.append("circle").attr("cx",lx).attr("cy",ly).attr("r",4.5).attr("fill",css("--brand"));
 }
@@ -568,16 +613,17 @@ dayIdx=Math.max(0,dates.findIndex(([d])=>d==="2022-06-16"));
 function side(){
   const f=geo.features.find(f=>f.properties.name===sel), st=f.properties.station, s=daily[st], i=I(), m=monthNow(), rec=impactKey[`${sel}|${year}|${m}`];
   const o=outcome(st), obs=observed(st), L=[1,2,3,5,7];
-  const bars=L.map(h=>{const p=s["p"+h][i],c=s["c"+h][i];return `<div><span>${pct(p)}</span><span class="b ${p>=c?"on":""}" style="height:${Math.max(2,p*64)}px"></span>${h}d</div>`}).join("");
+  const bars=L.map(h=>{const p=s["p"+h][i],c=s["c"+h][i];return `<div><span>${pct(p)}</span><span class="b ${p>=c?"on":""}" style="height:${Math.max(2,p*64)}px"></span>${h} day${h>1?"s":""}</div>`}).join("");
   const reported=rec?(rec.pop>=1000?`ASDMA reported <b>${fmt(rec.pop)}</b> people affected in ${MONTHS[m-1]} ${year}.`:rec.pop>0?`ASDMA reported ${fmt(rec.pop)} people affected in ${MONTHS[m-1]} ${year}.`:`ASDMA reported no one affected in ${MONTHS[m-1]} ${year}.`):`No ASDMA report for ${MONTHS[m-1]} ${year}.`;
   $("#side").innerHTML=`<h2>${sel}</h2><p class="sub">${st} gauge on the ${stations[st].river}</p>
     <div class="verdict"><b>${warned(st)?"Flood warning":"No warning"}</b> from the ${lead}-day forecast. <span class="chip ${o.k}">${o.t}</span><br>
-    What happened: ${obs===null?"not known yet.":obs?`the river reached its warning level within ${lead} day${lead>1?"s":""}.`:`the river stayed below its warning level.`}<br>${reported}</div>
-    <h3>Chance of flooding, forecast on ${prettyDate(dates[dayIdx][0])}</h3><div class="bars">${bars}</div>
-    <p class="note">Darker bars crossed the alert line, which was tuned on earlier years only.</p>
-    ${rec&&rec.p!=null?`<p class="note">Impact model: ${pct(rec.p)} chance of 1,000+ people affected this month (alert at ${pct(rec.cut)}).</p>`:""}
+    What happened: ${obs===null?"not known yet.":obs?`the river reached flood level within ${lead} day${lead>1?"s":""}.`:`the river stayed below flood level.`}<br>${reported}</div>
+    <h3>Chance of the river flooding, as forecast on ${prettyDate(dates[dayIdx][0])}</h3><div class="bars">${bars}</div>
+    <p class="note">Each bar is a different warning time (1 to 7 days). Dark bars mean a warning was given.</p>
+    <p class="why"><b>Why warn at only 10–20%?</b> Floods are rare, so even a small chance is much higher than normal. FloodWatch warns once the chance passes a line set from past monsoons, like carrying an umbrella when rain is unusually likely.</p>
+    ${rec&&rec.p!=null?`<p class="note">Chance that 1,000+ people would be affected in ${sel} this month: <b>${pct(rec.p)}</b> (alert above ${pct(rec.cut)}).</p>`:""}
     <h3>River flow in ${year}</h3><svg id="hydro" viewBox="0 0 300 120" role="img" aria-label="River flow at ${st} against its warning level"></svg>
-    <p class="note">That day: ${fmt(s.q[i])} m³/s, ${pct(s.q[i]/s.thr[i])} of the warning level (dashed).</p>`;
+    <p class="note">That day the river was <b>${nearness(s.q[i]/s.thr[i]).t.toLowerCase()}</b> (${pct(s.q[i]/s.thr[i])} of it). Red dashed line = flood level.</p>`;
   const idx=dates.map(([,j])=>j), q=idx.map(j=>s.q[j]);
   const x=d3.scaleLinear().domain([0,idx.length-1]).range([4,296]), y=d3.scaleLinear().domain([0,d3.max([...q,s.thr[i]])*1.08]).range([104,6]);
   const hs=d3.select("#hydro");
@@ -590,7 +636,7 @@ function checkBox(){
   const out=ALL.map(outcome), c=t=>out.filter(o=>o.t===t).length, m=monthNow();
   const rep=geo.features.filter(f=>(impactKey[`${f.properties.name}|${year}|${m}`]||{}).pop>=1000).length, flooded=c("Correct warning")+c("Missed flood");
   $("#checkbox").innerHTML=c("Too recent to check")===ALL.length?`<b>${prettyDate(dates[dayIdx][0])}</b>: too recent to check what happened next.`:
-    `<b>${prettyDate(dates[dayIdx][0])}</b>: ${flooded} of 12 river stations reached flood level in the next ${lead} day${lead>1?"s":""}${flooded?`, and the forecast warned for ${c("Correct warning")} of them`:""}. ASDMA reported 1,000+ people affected in ${rep} district${rep===1?"":"s"} that month.
+    `<b>${prettyDate(dates[dayIdx][0])}</b>: ${flooded} of 12 rivers reached flood level in the next ${lead} day${lead>1?"s":""}${flooded?`, and the forecast warned for ${c("Correct warning")} of them`:""}. ASDMA reported 1,000+ people affected in ${rep} district${rep===1?"":"s"} that month.
     <div class="tally"><span class="chip c-ok">${c("Correct warning")} correct warning${c("Correct warning")===1?"":"s"}</span><span class="chip c-bad">${c("Missed flood")} missed</span><span class="chip c-bad">${c("False alarm")} false alarm${c("False alarm")===1?"":"s"}</span><span class="chip c-ok">${c("Correctly no warning")} correctly quiet</span></div>`;
 }
 function update(){
